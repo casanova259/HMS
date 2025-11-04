@@ -14,7 +14,22 @@ import Dashboard from "@/pages/Dashboard";
 import Rooms from "@/pages/Rooms";
 import Maintenance from "@/pages/Maintenance";
 import Students from "@/pages/Students";
+import Menu from "@/pages/Menu";
+import Complaints from "@/pages/Complaints";
+import Payments from "@/pages/Payments";
+import FoodRequests from "@/pages/FoodRequests";
+import Reports from "@/pages/Reports";
+import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
+
+// Check if user is logged in
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = localStorage.getItem('currentUser');
+  if (!user) {
+    return <Login />;
+  }
+  return <>{children}</>;
+};
 
 // Placeholder pages
 const PlaceholderPage = ({ title }: { title: string }) => (
