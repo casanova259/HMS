@@ -41,9 +41,9 @@ const App = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/rooms" element={<PlaceholderPage title="Rooms Management" />} />
+              <Route path="/rooms" element={<Rooms />} />
               <Route path="/students" element={<PlaceholderPage title="Students" />} />
-              <Route path="/maintenance" element={<PlaceholderPage title="Maintenance Requests" />} />
+              <Route path="/maintenance" element={<Maintenance />} />
               <Route path="/complaints" element={<PlaceholderPage title="Complaints" />} />
               <Route path="/payments" element={<PlaceholderPage title="Payments" />} />
               <Route path="/menu" element={<PlaceholderPage title="Menu Management" />} />
