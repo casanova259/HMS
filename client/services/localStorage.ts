@@ -8,19 +8,19 @@ import {
   Announcement,
   Activity,
   Payment,
-} from '@/types';
+} from "@/types";
 
 const STORAGE_KEYS = {
-  ROOMS: 'hostelWarden_rooms',
-  STUDENTS: 'hostelWarden_students',
-  MAINTENANCE: 'hostelWarden_maintenance',
-  COMPLAINTS: 'hostelWarden_complaints',
-  MENUS: 'hostelWarden_menus',
-  FOOD_REQUESTS: 'hostelWarden_foodRequests',
-  ANNOUNCEMENTS: 'hostelWarden_announcements',
-  ACTIVITIES: 'hostelWarden_activities',
-  PAYMENTS: 'hostelWarden_payments',
-  INITIALIZED: 'hostelWarden_initialized',
+  ROOMS: "hostelWarden_rooms",
+  STUDENTS: "hostelWarden_students",
+  MAINTENANCE: "hostelWarden_maintenance",
+  COMPLAINTS: "hostelWarden_complaints",
+  MENUS: "hostelWarden_menus",
+  FOOD_REQUESTS: "hostelWarden_foodRequests",
+  ANNOUNCEMENTS: "hostelWarden_announcements",
+  ACTIVITIES: "hostelWarden_activities",
+  PAYMENTS: "hostelWarden_payments",
+  INITIALIZED: "hostelWarden_initialized",
 };
 
 export const localStorageService = {
@@ -63,7 +63,11 @@ export const localStorageService = {
     const rooms = localStorageService.getRooms();
     const index = rooms.findIndex((r) => r.id === roomId);
     if (index === -1) return false;
-    rooms[index] = { ...rooms[index], ...updates, updatedAt: new Date().toISOString() };
+    rooms[index] = {
+      ...rooms[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setRooms(rooms);
   },
 
@@ -102,7 +106,11 @@ export const localStorageService = {
     const students = localStorageService.getStudents();
     const index = students.findIndex((s) => s.id === studentId);
     if (index === -1) return false;
-    students[index] = { ...students[index], ...updates, updatedAt: new Date().toISOString() };
+    students[index] = {
+      ...students[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setStudents(students);
   },
 
@@ -121,11 +129,18 @@ export const localStorageService = {
     return localStorageService.setMaintenanceRequests(requests);
   },
 
-  updateMaintenanceRequest: (requestId: string, updates: Partial<MaintenanceRequest>): boolean => {
+  updateMaintenanceRequest: (
+    requestId: string,
+    updates: Partial<MaintenanceRequest>,
+  ): boolean => {
     const requests = localStorageService.getMaintenanceRequests();
     const index = requests.findIndex((r) => r.id === requestId);
     if (index === -1) return false;
-    requests[index] = { ...requests[index], ...updates, updatedAt: new Date().toISOString() };
+    requests[index] = {
+      ...requests[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setMaintenanceRequests(requests);
   },
 
@@ -144,11 +159,18 @@ export const localStorageService = {
     return localStorageService.setComplaints(complaints);
   },
 
-  updateComplaint: (complaintId: string, updates: Partial<Complaint>): boolean => {
+  updateComplaint: (
+    complaintId: string,
+    updates: Partial<Complaint>,
+  ): boolean => {
     const complaints = localStorageService.getComplaints();
     const index = complaints.findIndex((c) => c.id === complaintId);
     if (index === -1) return false;
-    complaints[index] = { ...complaints[index], ...updates, updatedAt: new Date().toISOString() };
+    complaints[index] = {
+      ...complaints[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setComplaints(complaints);
   },
 
@@ -176,7 +198,11 @@ export const localStorageService = {
     const menus = localStorageService.getMenus();
     const index = menus.findIndex((m) => m.id === menuId);
     if (index === -1) return false;
-    menus[index] = { ...menus[index], ...updates, updatedAt: new Date().toISOString() };
+    menus[index] = {
+      ...menus[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setMenus(menus);
   },
 
@@ -195,11 +221,18 @@ export const localStorageService = {
     return localStorageService.setFoodRequests(requests);
   },
 
-  updateFoodRequest: (requestId: string, updates: Partial<FoodRequest>): boolean => {
+  updateFoodRequest: (
+    requestId: string,
+    updates: Partial<FoodRequest>,
+  ): boolean => {
     const requests = localStorageService.getFoodRequests();
     const index = requests.findIndex((r) => r.id === requestId);
     if (index === -1) return false;
-    requests[index] = { ...requests[index], ...updates, updatedAt: new Date().toISOString() };
+    requests[index] = {
+      ...requests[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setFoodRequests(requests);
   },
 
@@ -209,7 +242,10 @@ export const localStorageService = {
   },
 
   setAnnouncements: (announcements: Announcement[]): boolean => {
-    return localStorageService.setData(STORAGE_KEYS.ANNOUNCEMENTS, announcements);
+    return localStorageService.setData(
+      STORAGE_KEYS.ANNOUNCEMENTS,
+      announcements,
+    );
   },
 
   addAnnouncement: (announcement: Announcement): boolean => {
@@ -218,11 +254,18 @@ export const localStorageService = {
     return localStorageService.setAnnouncements(announcements);
   },
 
-  updateAnnouncement: (announcementId: string, updates: Partial<Announcement>): boolean => {
+  updateAnnouncement: (
+    announcementId: string,
+    updates: Partial<Announcement>,
+  ): boolean => {
     const announcements = localStorageService.getAnnouncements();
     const index = announcements.findIndex((a) => a.id === announcementId);
     if (index === -1) return false;
-    announcements[index] = { ...announcements[index], ...updates, updatedAt: new Date().toISOString() };
+    announcements[index] = {
+      ...announcements[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
     return localStorageService.setAnnouncements(announcements);
   },
 
@@ -258,15 +301,15 @@ export const localStorageService = {
 
   // Initialization check
   isInitialized: (): boolean => {
-    return localStorage.getItem(STORAGE_KEYS.INITIALIZED) === 'true';
+    return localStorage.getItem(STORAGE_KEYS.INITIALIZED) === "true";
   },
 
   markInitialized: (): boolean => {
     try {
-      localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
+      localStorage.setItem(STORAGE_KEYS.INITIALIZED, "true");
       return true;
     } catch (error) {
-      console.error('Error marking initialized:', error);
+      console.error("Error marking initialized:", error);
       return false;
     }
   },
@@ -279,7 +322,7 @@ export const localStorageService = {
       });
       return true;
     } catch (error) {
-      console.error('Error clearing localStorage:', error);
+      console.error("Error clearing localStorage:", error);
       return false;
     }
   },

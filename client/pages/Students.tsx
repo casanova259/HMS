@@ -1,19 +1,24 @@
-import { useState, useMemo } from 'react';
-import { Plus, Check, AlertCircle } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Badge } from '@/components/common/Badge';
-import { localStorageService } from '@/services/localStorage';
+import { useState, useMemo } from "react";
+import { Plus, Check, AlertCircle } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { Badge } from "@/components/common/Badge";
+import { localStorageService } from "@/services/localStorage";
 import {
   validateEmail,
   validateMobileNumber,
   validateRollNo,
   formatCurrency,
   getCapacityNumber,
-} from '@/utils/formatting';
-import { Student, Room } from '@/types';
+} from "@/utils/formatting";
+import { Student, Room } from "@/types";
 
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-const DEPARTMENTS: Array<'CSE' | 'ECE' | 'ME' | 'CE'> = ['CSE', 'ECE', 'ME', 'CE'];
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
+const DEPARTMENTS: Array<"CSE" | "ECE" | "ME" | "CE"> = [
+  "CSE",
+  "ECE",
+  "ME",
+  "CE",
+];
 
 interface FormErrors {
   [key: string]: string;
@@ -27,32 +32,32 @@ interface SuccessData {
 }
 
 export default function Students() {
-  const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
+  const [activeTab, setActiveTab] = useState<"list" | "add">("list");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successData, setSuccessData] = useState<SuccessData | null>(null);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    rollNumber: '',
-    universityRollNumber: '',
-    class: 'CSE' as 'CSE' | 'ECE' | 'ME' | 'CE',
-    semester: '1',
-    session: '2024-25',
-    fathersName: '',
-    mobileNumber: '',
-    emergencyContact: '',
-    email: '',
-    dob: '',
-    bloodGroup: '',
-    address: '',
-    previousHostel: '',
-    medicalConditions: '',
-    allergyInformation: '',
-    selectedRoomId: '',
-    selectedBedNumber: '',
-    paymentStatus: 'Unpaid' as 'Paid' | 'Unpaid',
-    transactionId: '',
+    fullName: "",
+    rollNumber: "",
+    universityRollNumber: "",
+    class: "CSE" as "CSE" | "ECE" | "ME" | "CE",
+    semester: "1",
+    session: "2024-25",
+    fathersName: "",
+    mobileNumber: "",
+    emergencyContact: "",
+    email: "",
+    dob: "",
+    bloodGroup: "",
+    address: "",
+    previousHostel: "",
+    medicalConditions: "",
+    allergyInformation: "",
+    selectedRoomId: "",
+    selectedBedNumber: "",
+    paymentStatus: "Unpaid" as "Paid" | "Unpaid",
+    transactionId: "",
   });
 
   const rooms = localStorageService.getRooms();
@@ -62,12 +67,14 @@ export default function Students() {
   const availableRooms = useMemo(() => {
     return rooms.filter((room) => {
       const capacity = getCapacityNumber(room.capacity);
-      return room.status !== 'Maintenance' && room.occupancy < capacity;
+      return room.status !== "Maintenance" && room.occupancy < capacity;
     });
   }, [rooms]);
 
   // Get available beds in selected room
-  const selectedRoom = formData.selectedRoomId ? rooms.find((r) => r.id === formData.selectedRoomId) : null;
+  const selectedRoom = formData.selectedRoomId
+    ? rooms.find((r) => r.id === formData.selectedRoomId)
+    : null;
   const availableBeds = useMemo(() => {
     if (!selectedRoom) return [];
     const capacity = getCapacityNumber(selectedRoom.capacity);
@@ -81,22 +88,25 @@ export default function Students() {
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
 
-    if (!formData.fullName.trim()) errors.fullName = 'Full name is required';
-    if (!formData.rollNumber.trim()) errors.rollNumber = 'Roll number is required';
+    if (!formData.fullName.trim()) errors.fullName = "Full name is required";
+    if (!formData.rollNumber.trim())
+      errors.rollNumber = "Roll number is required";
     if (!validateRollNo(formData.universityRollNumber)) {
-      errors.universityRollNumber = 'Invalid university roll number format';
+      errors.universityRollNumber = "Invalid university roll number format";
     }
     if (!validateMobileNumber(formData.mobileNumber)) {
-      errors.mobileNumber = 'Mobile number must be 10 digits';
+      errors.mobileNumber = "Mobile number must be 10 digits";
     }
     if (!validateMobileNumber(formData.emergencyContact)) {
-      errors.emergencyContact = 'Emergency contact must be 10 digits';
+      errors.emergencyContact = "Emergency contact must be 10 digits";
     }
     if (!validateEmail(formData.email)) {
-      errors.email = 'Invalid email address';
+      errors.email = "Invalid email address";
     }
-    if (!formData.selectedRoomId) errors.selectedRoomId = 'Room selection is required';
-    if (!formData.selectedBedNumber) errors.selectedBedNumber = 'Bed selection is required';
+    if (!formData.selectedRoomId)
+      errors.selectedRoomId = "Room selection is required";
+    if (!formData.selectedBedNumber)
+      errors.selectedBedNumber = "Bed selection is required";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -142,8 +152,11 @@ export default function Students() {
       paymentStatus: formData.paymentStatus,
       paymentDetails: {
         transactionId: formData.transactionId || undefined,
-        paidAmount: formData.paymentStatus === 'Paid' ? 30000 : 0,
-        paidDate: formData.paymentStatus === 'Paid' ? new Date().toISOString() : undefined,
+        paidAmount: formData.paymentStatus === "Paid" ? 30000 : 0,
+        paidDate:
+          formData.paymentStatus === "Paid"
+            ? new Date().toISOString()
+            : undefined,
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -165,37 +178,37 @@ export default function Students() {
     setSuccessData({
       studentId: newStudent.id,
       studentName: newStudent.fullName,
-      roomNumber: selectedRoomObj?.number || 'Unknown',
+      roomNumber: selectedRoomObj?.number || "Unknown",
       bedNumber: parseInt(formData.selectedBedNumber),
     });
     setShowSuccessModal(true);
 
     // Reset form
     setFormData({
-      fullName: '',
-      rollNumber: '',
-      universityRollNumber: '',
-      class: 'CSE',
-      semester: '1',
-      session: '2024-25',
-      fathersName: '',
-      mobileNumber: '',
-      emergencyContact: '',
-      email: '',
-      dob: '',
-      bloodGroup: '',
-      address: '',
-      previousHostel: '',
-      medicalConditions: '',
-      allergyInformation: '',
-      selectedRoomId: '',
-      selectedBedNumber: '',
-      paymentStatus: 'Unpaid',
-      transactionId: '',
+      fullName: "",
+      rollNumber: "",
+      universityRollNumber: "",
+      class: "CSE",
+      semester: "1",
+      session: "2024-25",
+      fathersName: "",
+      mobileNumber: "",
+      emergencyContact: "",
+      email: "",
+      dob: "",
+      bloodGroup: "",
+      address: "",
+      previousHostel: "",
+      medicalConditions: "",
+      allergyInformation: "",
+      selectedRoomId: "",
+      selectedBedNumber: "",
+      paymentStatus: "Unpaid",
+      transactionId: "",
     });
   };
 
-  if (activeTab === 'list') {
+  if (activeTab === "list") {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -204,7 +217,7 @@ export default function Students() {
             <p className="text-gray-600 mt-2">Manage hostel students</p>
           </div>
           <button
-            onClick={() => setActiveTab('add')}
+            onClick={() => setActiveTab("add")}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
@@ -213,7 +226,10 @@ export default function Students() {
         </div>
 
         <div className="bg-white rounded-lg p-12 shadow text-center">
-          <p className="text-gray-600 mb-4">Student list coming soon. Click "Add Student" to allocate new students.</p>
+          <p className="text-gray-600 mb-4">
+            Student list coming soon. Click "Add Student" to allocate new
+            students.
+          </p>
         </div>
       </div>
     );
@@ -222,7 +238,7 @@ export default function Students() {
   return (
     <div className="space-y-6">
       <button
-        onClick={() => setActiveTab('list')}
+        onClick={() => setActiveTab("list")}
         className="text-blue-600 hover:text-blue-700 font-medium text-sm"
       >
         ← Back to List
@@ -230,7 +246,9 @@ export default function Students() {
 
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Add New Student</h1>
-        <p className="text-gray-600 mt-2">Allocate a new student to the hostel</p>
+        <p className="text-gray-600 mt-2">
+          Allocate a new student to the hostel
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -238,41 +256,61 @@ export default function Students() {
         <div className="lg:col-span-2 space-y-6">
           {/* Personal Information */}
           <div className="bg-white rounded-lg p-6 shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Personal Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
                 <input
                   type="text"
                   value={formData.fullName}
-                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("fullName", e.target.value)
+                  }
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.fullName ? 'border-red-500' : 'border-gray-300'
+                    formErrors.fullName ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="John Doe"
                 />
-                {formErrors.fullName && <p className="text-red-600 text-xs mt-1">{formErrors.fullName}</p>}
+                {formErrors.fullName && (
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.fullName}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Roll Number *
+                </label>
                 <input
                   type="text"
                   value={formData.rollNumber}
-                  onChange={(e) => handleInputChange('rollNumber', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("rollNumber", e.target.value)
+                  }
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.rollNumber ? 'border-red-500' : 'border-gray-300'
+                    formErrors.rollNumber ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="CSE001"
                 />
-                {formErrors.rollNumber && <p className="text-red-600 text-xs mt-1">{formErrors.rollNumber}</p>}
+                {formErrors.rollNumber && (
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.rollNumber}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Class *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Class *
+                </label>
                 <select
                   value={formData.class}
-                  onChange={(e) => handleInputChange('class', e.target.value)}
+                  onChange={(e) => handleInputChange("class", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {DEPARTMENTS.map((dept) => (
@@ -284,10 +322,14 @@ export default function Students() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Semester *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Semester *
+                </label>
                 <select
                   value={formData.semester}
-                  onChange={(e) => handleInputChange('semester', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("semester", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {Array.from({ length: 8 }, (_, i) => i + 1).map((sem) => (
@@ -299,10 +341,12 @@ export default function Students() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Session *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Session *
+                </label>
                 <select
                   value={formData.session}
-                  onChange={(e) => handleInputChange('session', e.target.value)}
+                  onChange={(e) => handleInputChange("session", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option>2024-25</option>
@@ -312,47 +356,65 @@ export default function Students() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">University Roll Number *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  University Roll Number *
+                </label>
                 <input
                   type="text"
                   value={formData.universityRollNumber}
-                  onChange={(e) => handleInputChange('universityRollNumber', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("universityRollNumber", e.target.value)
+                  }
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.universityRollNumber ? 'border-red-500' : 'border-gray-300'
+                    formErrors.universityRollNumber
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                   placeholder="PEC2024CSE001"
                 />
                 {formErrors.universityRollNumber && (
-                  <p className="text-red-600 text-xs mt-1">{formErrors.universityRollNumber}</p>
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.universityRollNumber}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Father's Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Father's Name
+                </label>
                 <input
                   type="text"
                   value={formData.fathersName}
-                  onChange={(e) => handleInputChange('fathersName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("fathersName", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Father's Full Name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date of Birth
+                </label>
                 <input
                   type="date"
                   value={formData.dob}
-                  onChange={(e) => handleInputChange('dob', e.target.value)}
+                  onChange={(e) => handleInputChange("dob", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Blood Group</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Blood Group
+                </label>
                 <select
                   value={formData.bloodGroup}
-                  onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("bloodGroup", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Blood Group</option>
@@ -368,57 +430,85 @@ export default function Students() {
 
           {/* Contact Information */}
           <div className="bg-white rounded-lg p-6 shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Contact Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Mobile Number *
+                </label>
                 <input
                   type="tel"
                   value={formData.mobileNumber}
-                  onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("mobileNumber", e.target.value)
+                  }
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.mobileNumber ? 'border-red-500' : 'border-gray-300'
+                    formErrors.mobileNumber
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                   placeholder="9876543210"
                 />
-                {formErrors.mobileNumber && <p className="text-red-600 text-xs mt-1">{formErrors.mobileNumber}</p>}
+                {formErrors.mobileNumber && (
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.mobileNumber}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Emergency Contact *
+                </label>
                 <input
                   type="tel"
                   value={formData.emergencyContact}
-                  onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("emergencyContact", e.target.value)
+                  }
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.emergencyContact ? 'border-red-500' : 'border-gray-300'
+                    formErrors.emergencyContact
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                   placeholder="9876543210"
                 />
                 {formErrors.emergencyContact && (
-                  <p className="text-red-600 text-xs mt-1">{formErrors.emergencyContact}</p>
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.emergencyContact}
+                  </p>
                 )}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address *
+                </label>
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    formErrors.email ? 'border-red-500' : 'border-gray-300'
+                    formErrors.email ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="student@college.edu"
                 />
-                {formErrors.email && <p className="text-red-600 text-xs mt-1">{formErrors.email}</p>}
+                {formErrors.email && (
+                  <p className="text-red-600 text-xs mt-1">
+                    {formErrors.email}
+                  </p>
+                )}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Address
+                </label>
                 <textarea
                   value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                   placeholder="Full address"
@@ -429,24 +519,34 @@ export default function Students() {
 
           {/* Additional Information */}
           <div className="bg-white rounded-lg p-6 shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Additional Information
+            </h3>
             <div className="grid grid-cols-1 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Previous Hostel</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Previous Hostel
+                </label>
                 <input
                   type="text"
                   value={formData.previousHostel}
-                  onChange={(e) => handleInputChange('previousHostel', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("previousHostel", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Previous hostel name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Medical Conditions
+                </label>
                 <textarea
                   value={formData.medicalConditions}
-                  onChange={(e) => handleInputChange('medicalConditions', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("medicalConditions", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={2}
                   placeholder="Any medical conditions"
@@ -454,10 +554,14 @@ export default function Students() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Allergy Information</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Allergy Information
+                </label>
                 <textarea
                   value={formData.allergyInformation}
-                  onChange={(e) => handleInputChange('allergyInformation', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("allergyInformation", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={2}
                   placeholder="Any allergies"
@@ -468,17 +572,23 @@ export default function Students() {
 
           {/* Room Allocation */}
           <div className="bg-white rounded-lg p-6 shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Room Allocation *</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Room Allocation *
+            </h3>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Select Room</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Room
+              </label>
               <select
                 value={formData.selectedRoomId}
                 onChange={(e) => {
-                  handleInputChange('selectedRoomId', e.target.value);
-                  handleInputChange('selectedBedNumber', '');
+                  handleInputChange("selectedRoomId", e.target.value);
+                  handleInputChange("selectedBedNumber", "");
                 }}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  formErrors.selectedRoomId ? 'border-red-500' : 'border-gray-300'
+                  formErrors.selectedRoomId
+                    ? "border-red-500"
+                    : "border-gray-300"
                 }`}
               >
                 <option value="">Choose a room...</option>
@@ -486,17 +596,24 @@ export default function Students() {
                   const capacity = getCapacityNumber(room.capacity);
                   return (
                     <option key={room.id} value={room.id}>
-                      {room.number} - {room.floor} Floor, Block {room.block} ({capacity - room.occupancy} bed available)
+                      {room.number} - {room.floor} Floor, Block {room.block} (
+                      {capacity - room.occupancy} bed available)
                     </option>
                   );
                 })}
               </select>
-              {formErrors.selectedRoomId && <p className="text-red-600 text-xs mt-1">{formErrors.selectedRoomId}</p>}
+              {formErrors.selectedRoomId && (
+                <p className="text-red-600 text-xs mt-1">
+                  {formErrors.selectedRoomId}
+                </p>
+              )}
             </div>
 
             {selectedRoom && (
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-3">Select Bed Number</p>
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Select Bed Number
+                </p>
                 <div className="space-y-2">
                   {availableBeds.map((bed) => (
                     <label key={bed} className="flex items-center">
@@ -505,7 +622,9 @@ export default function Students() {
                         name="bed"
                         value={bed}
                         checked={formData.selectedBedNumber === String(bed)}
-                        onChange={(e) => handleInputChange('selectedBedNumber', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("selectedBedNumber", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <span className="text-gray-700">Bed {bed}</span>
@@ -518,13 +637,17 @@ export default function Students() {
 
           {/* Payment Information */}
           <div className="bg-white rounded-lg p-6 shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Payment Information
+            </h3>
             <div className="mb-4 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-gray-700 mb-2">
-                <span className="font-semibold">Hostel Fee:</span> {formatCurrency(25000)}
+                <span className="font-semibold">Hostel Fee:</span>{" "}
+                {formatCurrency(25000)}
               </p>
               <p className="text-sm text-gray-700 mb-2">
-                <span className="font-semibold">Security Deposit:</span> {formatCurrency(5000)}
+                <span className="font-semibold">Security Deposit:</span>{" "}
+                {formatCurrency(5000)}
               </p>
               <p className="text-lg font-semibold text-gray-900">
                 Total Amount: {formatCurrency(30000)}
@@ -532,10 +655,14 @@ export default function Students() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payment Status
+              </label>
               <select
                 value={formData.paymentStatus}
-                onChange={(e) => handleInputChange('paymentStatus', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("paymentStatus", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="Unpaid">Unpaid</option>
@@ -543,13 +670,17 @@ export default function Students() {
               </select>
             </div>
 
-            {formData.paymentStatus === 'Paid' && (
+            {formData.paymentStatus === "Paid" && (
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Transaction ID</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Transaction ID
+                </label>
                 <input
                   type="text"
                   value={formData.transactionId}
-                  onChange={(e) => handleInputChange('transactionId', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("transactionId", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="TXN123456"
                 />
@@ -566,7 +697,7 @@ export default function Students() {
               Allocate Student
             </button>
             <button
-              onClick={() => setActiveTab('list')}
+              onClick={() => setActiveTab("list")}
               className="flex-1 px-4 py-3 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
             >
               Cancel
@@ -577,37 +708,47 @@ export default function Students() {
         {/* Right Sidebar - Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg p-6 shadow sticky top-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Allocation Summary</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Allocation Summary
+            </h3>
             <div className="space-y-3 text-sm">
               <div>
                 <p className="text-gray-600">Student Name</p>
-                <p className="font-semibold text-gray-900">{formData.fullName || 'Not entered'}</p>
+                <p className="font-semibold text-gray-900">
+                  {formData.fullName || "Not entered"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-600">Roll Number</p>
-                <p className="font-semibold text-gray-900">{formData.rollNumber || 'Not entered'}</p>
+                <p className="font-semibold text-gray-900">
+                  {formData.rollNumber || "Not entered"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-600">Selected Room</p>
                 <p className="font-semibold text-gray-900">
-                  {selectedRoom ? selectedRoom.number : 'Not selected'}
+                  {selectedRoom ? selectedRoom.number : "Not selected"}
                 </p>
               </div>
               <div>
                 <p className="text-gray-600">Selected Bed</p>
                 <p className="font-semibold text-gray-900">
-                  {formData.selectedBedNumber ? `Bed ${formData.selectedBedNumber}` : 'Not selected'}
+                  {formData.selectedBedNumber
+                    ? `Bed ${formData.selectedBedNumber}`
+                    : "Not selected"}
                 </p>
               </div>
               <div className="pt-4 border-t">
                 <p className="text-gray-600">Total Fee</p>
-                <p className="font-semibold text-gray-900">{formatCurrency(30000)}</p>
+                <p className="font-semibold text-gray-900">
+                  {formatCurrency(30000)}
+                </p>
               </div>
               <div>
                 <p className="text-gray-600">Payment Status</p>
                 <Badge
                   label={formData.paymentStatus}
-                  status={formData.paymentStatus === 'Paid' ? 'paid' : 'unpaid'}
+                  status={formData.paymentStatus === "Paid" ? "paid" : "unpaid"}
                 />
               </div>
             </div>
@@ -621,7 +762,7 @@ export default function Students() {
           isOpen={showSuccessModal}
           onClose={() => {
             setShowSuccessModal(false);
-            setActiveTab('list');
+            setActiveTab("list");
           }}
           title="Student Allocated Successfully!"
           size="md"
@@ -629,23 +770,29 @@ export default function Students() {
           <div className="text-center space-y-4">
             <Check className="w-16 h-16 text-green-600 mx-auto" />
             <div>
-              <p className="text-gray-600 mb-2">Student has been successfully allocated to:</p>
-              <p className="text-2xl font-bold text-gray-900">{successData.roomNumber}</p>
+              <p className="text-gray-600 mb-2">
+                Student has been successfully allocated to:
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {successData.roomNumber}
+              </p>
               <p className="text-gray-600 mt-1">Bed {successData.bedNumber}</p>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-gray-700">
-                <span className="font-semibold">Student ID:</span> {successData.studentId}
+                <span className="font-semibold">Student ID:</span>{" "}
+                {successData.studentId}
               </p>
               <p className="text-sm text-gray-700">
-                <span className="font-semibold">Name:</span> {successData.studentName}
+                <span className="font-semibold">Name:</span>{" "}
+                {successData.studentName}
               </p>
             </div>
             <div className="flex gap-3 pt-4">
               <button
                 onClick={() => {
                   setShowSuccessModal(false);
-                  setActiveTab('list');
+                  setActiveTab("list");
                 }}
                 className="flex-1 px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-medium"
               >
@@ -656,26 +803,26 @@ export default function Students() {
                   setShowSuccessModal(false);
                   // Reset form and keep on add page
                   setFormData({
-                    fullName: '',
-                    rollNumber: '',
-                    universityRollNumber: '',
-                    class: 'CSE',
-                    semester: '1',
-                    session: '2024-25',
-                    fathersName: '',
-                    mobileNumber: '',
-                    emergencyContact: '',
-                    email: '',
-                    dob: '',
-                    bloodGroup: '',
-                    address: '',
-                    previousHostel: '',
-                    medicalConditions: '',
-                    allergyInformation: '',
-                    selectedRoomId: '',
-                    selectedBedNumber: '',
-                    paymentStatus: 'Unpaid',
-                    transactionId: '',
+                    fullName: "",
+                    rollNumber: "",
+                    universityRollNumber: "",
+                    class: "CSE",
+                    semester: "1",
+                    session: "2024-25",
+                    fathersName: "",
+                    mobileNumber: "",
+                    emergencyContact: "",
+                    email: "",
+                    dob: "",
+                    bloodGroup: "",
+                    address: "",
+                    previousHostel: "",
+                    medicalConditions: "",
+                    allergyInformation: "",
+                    selectedRoomId: "",
+                    selectedBedNumber: "",
+                    paymentStatus: "Unpaid",
+                    transactionId: "",
                   });
                 }}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"

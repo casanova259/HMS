@@ -1,27 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Plus, CheckCircle, AlertCircle } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Badge } from '@/components/common/Badge';
-import { SearchBar } from '@/components/common/SearchBar';
-import { localStorageService } from '@/services/localStorage';
-import { formatDate, getTimeAgo } from '@/utils/formatting';
-import { Complaint, Student } from '@/types';
+import { useState, useEffect } from "react";
+import { Plus, CheckCircle, AlertCircle } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { Badge } from "@/components/common/Badge";
+import { SearchBar } from "@/components/common/SearchBar";
+import { localStorageService } from "@/services/localStorage";
+import { formatDate, getTimeAgo } from "@/utils/formatting";
+import { Complaint, Student } from "@/types";
 
 export default function Complaints() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
-  const [statusFilter, setStatusFilter] = useState<'All' | 'Pending' | 'Resolved'>('All');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Pending" | "Resolved"
+  >("All");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showNewComplaintModal, setShowNewComplaintModal] = useState(false);
-  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
+  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(
+    null,
+  );
   const [showResolveModal, setShowResolveModal] = useState(false);
-  const [resolutionNotes, setResolutionNotes] = useState('');
+  const [resolutionNotes, setResolutionNotes] = useState("");
 
   const [newComplaint, setNewComplaint] = useState({
-    studentId: '',
-    type: '',
-    description: '',
-    urgency: 'Medium' as 'High' | 'Medium' | 'Low',
+    studentId: "",
+    type: "",
+    description: "",
+    urgency: "Medium" as "High" | "Medium" | "Low",
   });
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export default function Complaints() {
 
   const filteredComplaints = complaints
     .filter((c) => {
-      if (statusFilter !== 'All' && c.status !== statusFilter) return false;
+      if (statusFilter !== "All" && c.status !== statusFilter) return false;
       if (searchTerm) {
         const student = students.find((s) => s.id === c.studentId);
         return (
@@ -41,14 +45,24 @@ export default function Complaints() {
       }
       return true;
     })
-    .sort((a, b) => new Date(b.reportedDate).getTime() - new Date(a.reportedDate).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.reportedDate).getTime() - new Date(a.reportedDate).getTime(),
+    );
 
   const getStudentName = (studentId: string) => {
-    return students.find((s) => s.id === studentId)?.fullName || 'Unknown Student';
+    return (
+      students.find((s) => s.id === studentId)?.fullName || "Unknown Student"
+    );
   };
 
   const handleAddComplaint = () => {
-    if (!newComplaint.studentId || !newComplaint.type || !newComplaint.description) return;
+    if (
+      !newComplaint.studentId ||
+      !newComplaint.type ||
+      !newComplaint.description
+    )
+      return;
 
     const complaint: Complaint = {
       id: `complaint_${Date.now()}`,
@@ -56,7 +70,7 @@ export default function Complaints() {
       type: newComplaint.type,
       description: newComplaint.description,
       urgency: newComplaint.urgency,
-      status: 'Pending',
+      status: "Pending",
       reportedDate: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -66,10 +80,10 @@ export default function Complaints() {
     setComplaints(localStorageService.getComplaints());
     setShowNewComplaintModal(false);
     setNewComplaint({
-      studentId: '',
-      type: '',
-      description: '',
-      urgency: 'Medium',
+      studentId: "",
+      type: "",
+      description: "",
+      urgency: "Medium",
     });
   };
 
@@ -77,19 +91,21 @@ export default function Complaints() {
     if (!selectedComplaint) return;
 
     localStorageService.updateComplaint(selectedComplaint.id, {
-      status: 'Resolved',
+      status: "Resolved",
       resolvedDate: new Date().toISOString(),
       resolutionNotes: resolutionNotes,
     });
 
     setComplaints(localStorageService.getComplaints());
     setShowResolveModal(false);
-    setResolutionNotes('');
+    setResolutionNotes("");
     setSelectedComplaint(null);
   };
 
-  const getPendingCount = () => complaints.filter((c) => c.status === 'Pending').length;
-  const getResolvedCount = () => complaints.filter((c) => c.status === 'Resolved').length;
+  const getPendingCount = () =>
+    complaints.filter((c) => c.status === "Pending").length;
+  const getResolvedCount = () =>
+    complaints.filter((c) => c.status === "Resolved").length;
 
   return (
     <div className="space-y-6">
@@ -97,7 +113,9 @@ export default function Complaints() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Complaints</h1>
-          <p className="text-gray-600 mt-2">Manage student complaints and grievances</p>
+          <p className="text-gray-600 mt-2">
+            Manage student complaints and grievances
+          </p>
         </div>
         <button
           onClick={() => setShowNewComplaintModal(true)}
@@ -112,30 +130,42 @@ export default function Complaints() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            statusFilter === 'All' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+            statusFilter === "All"
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-200"
           }`}
-          onClick={() => setStatusFilter('All')}
+          onClick={() => setStatusFilter("All")}
         >
           <p className="text-gray-600 text-sm">Total Complaints</p>
-          <p className="text-2xl font-bold text-gray-900">{complaints.length}</p>
+          <p className="text-2xl font-bold text-gray-900">
+            {complaints.length}
+          </p>
         </div>
         <div
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            statusFilter === 'Pending' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200'
+            statusFilter === "Pending"
+              ? "border-yellow-500 bg-yellow-50"
+              : "border-gray-200"
           }`}
-          onClick={() => setStatusFilter('Pending')}
+          onClick={() => setStatusFilter("Pending")}
         >
           <p className="text-gray-600 text-sm">Pending</p>
-          <p className="text-2xl font-bold text-yellow-600">{getPendingCount()}</p>
+          <p className="text-2xl font-bold text-yellow-600">
+            {getPendingCount()}
+          </p>
         </div>
         <div
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            statusFilter === 'Resolved' ? 'border-green-500 bg-green-50' : 'border-gray-200'
+            statusFilter === "Resolved"
+              ? "border-green-500 bg-green-50"
+              : "border-gray-200"
           }`}
-          onClick={() => setStatusFilter('Resolved')}
+          onClick={() => setStatusFilter("Resolved")}
         >
           <p className="text-gray-600 text-sm">Resolved</p>
-          <p className="text-2xl font-bold text-green-600">{getResolvedCount()}</p>
+          <p className="text-2xl font-bold text-green-600">
+            {getResolvedCount()}
+          </p>
         </div>
       </div>
 
@@ -152,28 +182,36 @@ export default function Complaints() {
       <div className="space-y-4">
         {filteredComplaints.length > 0 ? (
           filteredComplaints.map((complaint) => (
-            <div key={complaint.id} className="bg-white rounded-lg p-6 shadow hover:shadow-md transition-shadow">
+            <div
+              key={complaint.id}
+              className="bg-white rounded-lg p-6 shadow hover:shadow-md transition-shadow"
+            >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-900">{complaint.type}</h3>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {complaint.type}
+                  </h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    <span className="font-medium">Student:</span> {getStudentName(complaint.studentId)}
+                    <span className="font-medium">Student:</span>{" "}
+                    {getStudentName(complaint.studentId)}
                   </p>
                 </div>
                 <div className="flex gap-2">
                   <Badge
                     label={complaint.urgency}
                     status={
-                      complaint.urgency === 'High'
-                        ? 'urgent'
-                        : complaint.urgency === 'Medium'
-                        ? 'medium'
-                        : 'low'
+                      complaint.urgency === "High"
+                        ? "urgent"
+                        : complaint.urgency === "Medium"
+                          ? "medium"
+                          : "low"
                     }
                   />
                   <Badge
                     label={complaint.status}
-                    status={complaint.status === 'Pending' ? 'pending' : 'completed'}
+                    status={
+                      complaint.status === "Pending" ? "pending" : "completed"
+                    }
                   />
                 </div>
               </div>
@@ -181,9 +219,11 @@ export default function Complaints() {
               <p className="text-gray-700 mb-4">{complaint.description}</p>
 
               <div className="flex items-center justify-between text-sm">
-                <p className="text-gray-600">Reported {getTimeAgo(complaint.reportedDate)}</p>
+                <p className="text-gray-600">
+                  Reported {getTimeAgo(complaint.reportedDate)}
+                </p>
 
-                {complaint.status === 'Pending' ? (
+                {complaint.status === "Pending" ? (
                   <button
                     onClick={() => {
                       setSelectedComplaint(complaint);
@@ -196,15 +236,18 @@ export default function Complaints() {
                 ) : (
                   <div className="flex items-center gap-2 text-green-600">
                     <CheckCircle className="w-4 h-4" />
-                    <span className="text-xs">Resolved on {formatDate(complaint.resolvedDate!)}</span>
+                    <span className="text-xs">
+                      Resolved on {formatDate(complaint.resolvedDate!)}
+                    </span>
                   </div>
                 )}
               </div>
 
-              {complaint.status === 'Resolved' && complaint.resolutionNotes && (
+              {complaint.status === "Resolved" && complaint.resolutionNotes && (
                 <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
                   <p className="text-sm text-green-800">
-                    <span className="font-semibold">Resolution:</span> {complaint.resolutionNotes}
+                    <span className="font-semibold">Resolution:</span>{" "}
+                    {complaint.resolutionNotes}
                   </p>
                 </div>
               )}
@@ -227,7 +270,9 @@ export default function Complaints() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Student *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Student *
+            </label>
             <select
               value={newComplaint.studentId}
               onChange={(e) =>
@@ -248,7 +293,9 @@ export default function Complaints() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Complaint Type *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Complaint Type *
+            </label>
             <select
               value={newComplaint.type}
               onChange={(e) =>
@@ -270,13 +317,15 @@ export default function Complaints() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Urgency
+            </label>
             <select
               value={newComplaint.urgency}
               onChange={(e) =>
                 setNewComplaint((prev) => ({
                   ...prev,
-                  urgency: e.target.value as 'High' | 'Medium' | 'Low',
+                  urgency: e.target.value as "High" | "Medium" | "Low",
                 }))
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -288,7 +337,9 @@ export default function Complaints() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description *
+            </label>
             <textarea
               value={newComplaint.description}
               onChange={(e) =>
@@ -325,7 +376,7 @@ export default function Complaints() {
         isOpen={showResolveModal}
         onClose={() => {
           setShowResolveModal(false);
-          setResolutionNotes('');
+          setResolutionNotes("");
           setSelectedComplaint(null);
         }}
         title="Resolve Complaint"
@@ -333,7 +384,9 @@ export default function Complaints() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Resolution Notes</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Resolution Notes
+            </label>
             <textarea
               value={resolutionNotes}
               onChange={(e) => setResolutionNotes(e.target.value)}
@@ -347,7 +400,7 @@ export default function Complaints() {
             <button
               onClick={() => {
                 setShowResolveModal(false);
-                setResolutionNotes('');
+                setResolutionNotes("");
                 setSelectedComplaint(null);
               }}
               className="flex-1 px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-medium"

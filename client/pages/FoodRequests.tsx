@@ -1,28 +1,30 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Plus, ThumbsUp, CheckCircle } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Badge } from '@/components/common/Badge';
-import { localStorageService } from '@/services/localStorage';
-import { getDaysUntil } from '@/utils/formatting';
-import { FoodRequest } from '@/types';
+import { useState, useEffect, useMemo } from "react";
+import { Plus, ThumbsUp, CheckCircle } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { Badge } from "@/components/common/Badge";
+import { localStorageService } from "@/services/localStorage";
+import { getDaysUntil } from "@/utils/formatting";
+import { FoodRequest } from "@/types";
 
 export default function FoodRequests() {
   const [foodRequests, setFoodRequests] = useState<FoodRequest[]>([]);
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
+    null,
+  );
 
   const [newRequest, setNewRequest] = useState({
-    dishName: '',
-    description: '',
-    mealType: 'Lunch' as 'Breakfast' | 'Lunch' | 'Snacks' | 'Dinner',
-    dietary: 'Veg' as 'Veg' | 'Non-veg' | 'Both',
-    whyWantThis: '',
+    dishName: "",
+    description: "",
+    mealType: "Lunch" as "Breakfast" | "Lunch" | "Snacks" | "Dinner",
+    dietary: "Veg" as "Veg" | "Non-veg" | "Both",
+    whyWantThis: "",
   });
 
   useEffect(() => {
     setFoodRequests(localStorageService.getFoodRequests());
-    const user = localStorage.getItem('currentUser');
+    const user = localStorage.getItem("currentUser");
     if (user) {
       setCurrentUser(JSON.parse(user));
     }
@@ -30,14 +32,17 @@ export default function FoodRequests() {
 
   const activeRequests = useMemo(() => {
     return foodRequests
-      .filter((r) => r.status === 'Active')
+      .filter((r) => r.status === "Active")
       .sort((a, b) => b.votes - a.votes);
   }, [foodRequests]);
 
   const completedRequests = useMemo(() => {
     return foodRequests
-      .filter((r) => r.status === 'Completed')
-      .sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
+      .filter((r) => r.status === "Completed")
+      .sort(
+        (a, b) =>
+          new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime(),
+      );
   }, [foodRequests]);
 
   const topRequests = activeRequests.slice(0, 5);
@@ -47,14 +52,14 @@ export default function FoodRequests() {
     if (!request || !currentUser) return;
 
     // Check if user already voted
-    if (request.votedBy.includes(currentUser.staffId || 'guest')) {
-      alert('You have already voted for this dish!');
+    if (request.votedBy.includes(currentUser.staffId || "guest")) {
+      alert("You have already voted for this dish!");
       return;
     }
 
     localStorageService.updateFoodRequest(requestId, {
       votes: request.votes + 1,
-      votedBy: [...request.votedBy, currentUser.staffId || 'guest'],
+      votedBy: [...request.votedBy, currentUser.staffId || "guest"],
     });
 
     setFoodRequests(localStorageService.getFoodRequests());
@@ -72,7 +77,7 @@ export default function FoodRequests() {
       whyWantThis: newRequest.whyWantThis,
       votes: 0,
       votedBy: [],
-      status: 'Active',
+      status: "Active",
       createdDate: new Date().toISOString(),
       closingDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       createdAt: new Date().toISOString(),
@@ -83,30 +88,36 @@ export default function FoodRequests() {
     setFoodRequests(localStorageService.getFoodRequests());
     setShowNewRequestModal(false);
     setNewRequest({
-      dishName: '',
-      description: '',
-      mealType: 'Lunch',
-      dietary: 'Veg',
-      whyWantThis: '',
+      dishName: "",
+      description: "",
+      mealType: "Lunch",
+      dietary: "Veg",
+      whyWantThis: "",
     });
   };
 
   const getDietaryColor = (dietary: string) => {
-    return dietary === 'Veg' ? 'bg-green-100 text-green-800' : dietary === 'Non-veg' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800';
+    return dietary === "Veg"
+      ? "bg-green-100 text-green-800"
+      : dietary === "Non-veg"
+        ? "bg-orange-100 text-orange-800"
+        : "bg-blue-100 text-blue-800";
   };
 
   const getMealColor = (mealType: string) => {
     const colors: Record<string, string> = {
-      Breakfast: 'bg-yellow-100 text-yellow-800',
-      Lunch: 'bg-blue-100 text-blue-800',
-      Snacks: 'bg-pink-100 text-pink-800',
-      Dinner: 'bg-purple-100 text-purple-800',
+      Breakfast: "bg-yellow-100 text-yellow-800",
+      Lunch: "bg-blue-100 text-blue-800",
+      Snacks: "bg-pink-100 text-pink-800",
+      Dinner: "bg-purple-100 text-purple-800",
     };
-    return colors[mealType] || 'bg-gray-100 text-gray-800';
+    return colors[mealType] || "bg-gray-100 text-gray-800";
   };
 
   const hasVoted = (request: FoodRequest) => {
-    return currentUser && request.votedBy.includes(currentUser.staffId || 'guest');
+    return (
+      currentUser && request.votedBy.includes(currentUser.staffId || "guest")
+    );
   };
 
   const getVotePercentage = (votes: number, total: number) => {
@@ -120,8 +131,12 @@ export default function FoodRequests() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dish Request Management</h1>
-          <p className="text-gray-600 mt-2">Review and manage dish requests submitted by students.</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Dish Request Management
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Review and manage dish requests submitted by students.
+          </p>
         </div>
         <button
           onClick={() => setShowNewRequestModal(true)}
@@ -134,38 +149,65 @@ export default function FoodRequests() {
 
       {/* Active Requests */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Vote for Your Favorite Dish</h2>
-        <p className="text-gray-600 mb-4">Voting closes in {Math.max(0, getDaysUntil(activeRequests[0]?.closingDate || new Date()))} days</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Vote for Your Favorite Dish
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Voting closes in{" "}
+          {Math.max(
+            0,
+            getDaysUntil(activeRequests[0]?.closingDate || new Date()),
+          )}{" "}
+          days
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {activeRequests.length > 0 ? (
             activeRequests.map((request) => {
-              const votePercentage = getVotePercentage(request.votes, totalVotes || 1);
+              const votePercentage = getVotePercentage(
+                request.votes,
+                totalVotes || 1,
+              );
               const userVoted = hasVoted(request);
 
               return (
-                <div key={request.id} className="bg-white rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
+                <div
+                  key={request.id}
+                  className="bg-white rounded-lg p-6 shadow hover:shadow-lg transition-shadow"
+                >
                   {/* Header */}
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">🍽️ {request.dishName}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      🍽️ {request.dishName}
+                    </h3>
                     <div className="flex flex-wrap gap-2">
-                      <Badge label={request.mealType} color={getMealColor(request.mealType)} />
-                      <Badge label={request.dietary} color={getDietaryColor(request.dietary)} />
+                      <Badge
+                        label={request.mealType}
+                        color={getMealColor(request.mealType)}
+                      />
+                      <Badge
+                        label={request.dietary}
+                        color={getDietaryColor(request.dietary)}
+                      />
                     </div>
                   </div>
 
                   {/* Description */}
                   {request.description && (
-                    <p className="text-gray-700 text-sm mb-4">{request.description}</p>
+                    <p className="text-gray-700 text-sm mb-4">
+                      {request.description}
+                    </p>
                   )}
 
                   {/* Votes */}
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-gray-700">
-                        {request.votes} {request.votes === 1 ? 'vote' : 'votes'}
+                        {request.votes} {request.votes === 1 ? "vote" : "votes"}
                       </span>
-                      <span className="text-sm text-gray-600">{votePercentage}%</span>
+                      <span className="text-sm text-gray-600">
+                        {votePercentage}%
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div
@@ -176,7 +218,9 @@ export default function FoodRequests() {
                   </div>
 
                   {/* Why wanted */}
-                  <p className="text-xs text-gray-600 mb-4 italic">"{request.whyWantThis}"</p>
+                  <p className="text-xs text-gray-600 mb-4 italic">
+                    "{request.whyWantThis}"
+                  </p>
 
                   {/* Vote Button */}
                   <button
@@ -184,8 +228,8 @@ export default function FoodRequests() {
                     disabled={userVoted}
                     className={`w-full py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                       userVoted
-                        ? 'bg-green-100 text-green-800 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        ? "bg-green-100 text-green-800 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
                     }`}
                   >
                     {userVoted ? (
@@ -214,15 +258,26 @@ export default function FoodRequests() {
       {/* Top Requested Sidebar */}
       {topRequests.length > 0 && (
         <div className="bg-white rounded-lg p-6 shadow">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Top Requested Dishes</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-4">
+            Top Requested Dishes
+          </h3>
           <div className="space-y-4">
             {topRequests.map((request, index) => (
-              <div key={request.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div
+                key={request.id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              >
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl font-bold text-blue-600">#{index + 1}</span>
+                  <span className="text-2xl font-bold text-blue-600">
+                    #{index + 1}
+                  </span>
                   <div>
-                    <p className="font-semibold text-gray-900">{request.dishName}</p>
-                    <p className="text-sm text-gray-600">{request.votes} votes</p>
+                    <p className="font-semibold text-gray-900">
+                      {request.dishName}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {request.votes} votes
+                    </p>
                   </div>
                 </div>
                 <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
@@ -237,27 +292,39 @@ export default function FoodRequests() {
       {/* Completed Requests */}
       {completedRequests.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Past Requests</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Past Requests
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {completedRequests.map((request) => (
               <div key={request.id} className="bg-white rounded-lg p-6 shadow">
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-lg font-bold text-gray-900">🍽️ {request.dishName}</h3>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    🍽️ {request.dishName}
+                  </h3>
                   <Badge
-                    label={request.implementationStatus || 'Pending'}
+                    label={request.implementationStatus || "Pending"}
                     status={
-                      request.implementationStatus === 'Added to menu'
-                        ? 'completed'
-                        : request.implementationStatus === 'Rejected'
-                        ? 'pending'
-                        : 'in-progress'
+                      request.implementationStatus === "Added to menu"
+                        ? "completed"
+                        : request.implementationStatus === "Rejected"
+                          ? "pending"
+                          : "in-progress"
                     }
                   />
                 </div>
-                <p className="text-sm text-gray-600 mb-4">{request.votes} total votes received</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  {request.votes} total votes received
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge label={request.mealType} color={getMealColor(request.mealType)} />
-                  <Badge label={request.dietary} color={getDietaryColor(request.dietary)} />
+                  <Badge
+                    label={request.mealType}
+                    color={getMealColor(request.mealType)}
+                  />
+                  <Badge
+                    label={request.dietary}
+                    color={getDietaryColor(request.dietary)}
+                  />
                 </div>
               </div>
             ))}
@@ -271,11 +338,11 @@ export default function FoodRequests() {
         onClose={() => {
           setShowNewRequestModal(false);
           setNewRequest({
-            dishName: '',
-            description: '',
-            mealType: 'Lunch',
-            dietary: 'Veg',
-            whyWantThis: '',
+            dishName: "",
+            description: "",
+            mealType: "Lunch",
+            dietary: "Veg",
+            whyWantThis: "",
           });
         }}
         title="Request a Dish"
@@ -283,7 +350,9 @@ export default function FoodRequests() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Dish Name *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Dish Name *
+            </label>
             <input
               type="text"
               value={newRequest.dishName}
@@ -299,7 +368,9 @@ export default function FoodRequests() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
             <textarea
               value={newRequest.description}
               onChange={(e) =>
@@ -316,13 +387,19 @@ export default function FoodRequests() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Meal Type *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Meal Type *
+              </label>
               <select
                 value={newRequest.mealType}
                 onChange={(e) =>
                   setNewRequest((prev) => ({
                     ...prev,
-                    mealType: e.target.value as 'Breakfast' | 'Lunch' | 'Snacks' | 'Dinner',
+                    mealType: e.target.value as
+                      | "Breakfast"
+                      | "Lunch"
+                      | "Snacks"
+                      | "Dinner",
                   }))
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -335,13 +412,15 @@ export default function FoodRequests() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Type
+              </label>
               <select
                 value={newRequest.dietary}
                 onChange={(e) =>
                   setNewRequest((prev) => ({
                     ...prev,
-                    dietary: e.target.value as 'Veg' | 'Non-veg' | 'Both',
+                    dietary: e.target.value as "Veg" | "Non-veg" | "Both",
                   }))
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -354,7 +433,9 @@ export default function FoodRequests() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Why You Want This *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Why You Want This *
+            </label>
             <textarea
               value={newRequest.whyWantThis}
               onChange={(e) =>
@@ -374,11 +455,11 @@ export default function FoodRequests() {
               onClick={() => {
                 setShowNewRequestModal(false);
                 setNewRequest({
-                  dishName: '',
-                  description: '',
-                  mealType: 'Lunch',
-                  dietary: 'Veg',
-                  whyWantThis: '',
+                  dishName: "",
+                  description: "",
+                  mealType: "Lunch",
+                  dietary: "Veg",
+                  whyWantThis: "",
                 });
               }}
               className="flex-1 px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-medium"

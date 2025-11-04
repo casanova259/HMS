@@ -2,11 +2,11 @@
 export interface Room {
   id: string;
   number: string;
-  floor: 'Ground' | '1st' | '2nd' | '3rd';
-  block: 'A' | 'B' | 'C';
-  capacity: 'Single' | 'Double' | 'Triple';
+  floor: "Ground" | "1st" | "2nd" | "3rd";
+  block: "A" | "B" | "C";
+  capacity: "Single" | "Double" | "Triple";
   occupancy: number;
-  status: 'Occupied' | 'Empty' | 'Maintenance';
+  status: "Occupied" | "Empty" | "Maintenance";
   amenities: {
     fans: number;
     lights: number;
@@ -16,7 +16,7 @@ export interface Room {
     cupboards: number;
   };
   amenityStatus: {
-    [key: string]: 'Working' | 'Faulty';
+    [key: string]: "Working" | "Faulty";
   };
   lastInspection: string;
   maintenanceIssue?: string;
@@ -37,7 +37,7 @@ export interface Student {
   fullName: string;
   rollNumber: string;
   universityRollNumber: string;
-  class: 'CSE' | 'ECE' | 'ME' | 'CE';
+  class: "CSE" | "ECE" | "ME" | "CE";
   semester: number;
   session: string;
   email: string;
@@ -52,7 +52,7 @@ export interface Student {
   allergyInformation?: string;
   roomId?: string;
   bedNumber?: number;
-  paymentStatus: 'Paid' | 'Unpaid' | 'Partial';
+  paymentStatus: "Paid" | "Unpaid" | "Partial";
   paymentDetails?: {
     transactionId?: string;
     paidAmount: number;
@@ -73,9 +73,9 @@ export interface MaintenanceRequest {
   title: string;
   description: string;
   roomId: string;
-  category: 'Electrical' | 'Plumbing' | 'Furniture' | 'Cleaning' | 'Other';
-  priority: 'High' | 'Medium' | 'Low';
-  status: 'Pending' | 'In Progress' | 'Resolved';
+  category: "Electrical" | "Plumbing" | "Furniture" | "Cleaning" | "Other";
+  priority: "High" | "Medium" | "Low";
+  status: "Pending" | "In Progress" | "Resolved";
   reportedBy: string;
   reportedDate: string;
   assignedTechnician?: string;
@@ -96,8 +96,8 @@ export interface Complaint {
   studentId: string;
   type: string;
   description: string;
-  urgency: 'High' | 'Medium' | 'Low';
-  status: 'Pending' | 'Resolved';
+  urgency: "High" | "Medium" | "Low";
+  status: "Pending" | "Resolved";
   reportedDate: string;
   resolvedDate?: string;
   resolutionNotes?: string;
@@ -109,7 +109,7 @@ export interface Complaint {
 export interface MenuItem {
   name: string;
   time: string;
-  dietary: 'Veg' | 'Non-veg' | 'Both';
+  dietary: "Veg" | "Non-veg" | "Both";
   allergens: string[];
 }
 
@@ -140,14 +140,14 @@ export interface FoodRequest {
   id: string;
   dishName: string;
   description: string;
-  mealType: 'Breakfast' | 'Lunch' | 'Snacks' | 'Dinner';
-  dietary: 'Veg' | 'Non-veg' | 'Both';
+  mealType: "Breakfast" | "Lunch" | "Snacks" | "Dinner";
+  dietary: "Veg" | "Non-veg" | "Both";
   whyWantThis: string;
   photo?: string;
   votes: number;
   votedBy: string[];
-  status: 'Active' | 'Completed' | 'Rejected';
-  implementationStatus?: 'Planned' | 'Added to menu' | 'Rejected';
+  status: "Active" | "Completed" | "Rejected";
+  implementationStatus?: "Planned" | "Added to menu" | "Rejected";
   createdDate: string;
   closingDate: string;
   createdAt: string;
@@ -159,8 +159,8 @@ export interface Announcement {
   id: string;
   title: string;
   content: string;
-  type: 'General' | 'Urgent' | 'Event' | 'Maintenance' | 'Notice';
-  priority: 'Low' | 'Medium' | 'High' | 'Critical';
+  type: "General" | "Urgent" | "Event" | "Maintenance" | "Notice";
+  priority: "Low" | "Medium" | "High" | "Critical";
   targetAudience: {
     allStudents: boolean;
     floors?: string[];
@@ -182,7 +182,7 @@ export interface Announcement {
     push: boolean;
     noticeBoard: boolean;
   };
-  status: 'Draft' | 'Scheduled' | 'Active' | 'Archived';
+  status: "Draft" | "Scheduled" | "Active" | "Archived";
   views: number;
   postedBy: string;
   scheduledDate?: string;
@@ -193,7 +193,13 @@ export interface Announcement {
 // Activity related types
 export interface Activity {
   id: string;
-  type: 'Student Allocated' | 'Payment Received' | 'Maintenance Reported' | 'Complaint Filed' | 'Announcement Posted' | 'Menu Updated';
+  type:
+    | "Student Allocated"
+    | "Payment Received"
+    | "Maintenance Reported"
+    | "Complaint Filed"
+    | "Announcement Posted"
+    | "Menu Updated";
   description: string;
   timestamp: string;
   relatedId?: string;
@@ -205,9 +211,9 @@ export interface Payment {
   id: string;
   studentId: string;
   amount: number;
-  type: 'Hostel Fee' | 'Security Deposit';
+  type: "Hostel Fee" | "Security Deposit";
   transactionId: string;
-  status: 'Paid' | 'Pending';
+  status: "Paid" | "Pending";
   date: string;
   method?: string;
   createdAt: string;

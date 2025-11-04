@@ -1,4 +1,4 @@
-import { Search, X } from 'lucide-react';
+import { Search, X } from "lucide-react";
 
 interface SearchBarProps {
   value: string;
@@ -10,11 +10,11 @@ interface SearchBarProps {
 export const SearchBar = ({
   value,
   onChange,
-  placeholder = 'Search...',
+  placeholder = "Search...",
   onClear,
 }: SearchBarProps) => {
   const handleClear = () => {
-    onChange('');
+    onChange("");
     onClear?.();
   };
 

@@ -24,7 +24,7 @@ import NotFound from "@/pages/NotFound";
 
 // Check if user is logged in
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = localStorage.getItem('currentUser');
+  const user = localStorage.getItem("currentUser");
   if (!user) {
     return <Login />;
   }

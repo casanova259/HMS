@@ -1,49 +1,57 @@
-import { Room, Student } from '@/types';
+import { Room, Student } from "@/types";
 
 export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
     minimumFractionDigits: 0,
   }).format(amount);
 };
 
 export const formatDate = (dateString: string | Date): string => {
-  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+  const date =
+    typeof dateString === "string" ? new Date(dateString) : dateString;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   }).format(date);
 };
 
 export const formatDateWithTime = (dateString: string | Date): string => {
-  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  const date =
+    typeof dateString === "string" ? new Date(dateString) : dateString;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(date);
 };
 
 export const calculateOccupancyRate = (rooms: Room[]): number => {
   if (rooms.length === 0) return 0;
-  
+
   const totalOccupied = rooms.reduce((sum, room) => {
-    return sum + (room.status === 'Occupied' ? room.occupancy : 0);
+    return sum + (room.status === "Occupied" ? room.occupancy : 0);
   }, 0);
 
   const totalCapacity = rooms.reduce((sum, room) => {
-    const capacityNum = room.capacity === 'Single' ? 1 : room.capacity === 'Double' ? 2 : 3;
+    const capacityNum =
+      room.capacity === "Single" ? 1 : room.capacity === "Double" ? 2 : 3;
     return sum + capacityNum;
   }, 0);
 
-  return totalCapacity > 0 ? Math.round((totalOccupied / totalCapacity) * 100) : 0;
+  return totalCapacity > 0
+    ? Math.round((totalOccupied / totalCapacity) * 100)
+    : 0;
 };
 
-export const getStudentsByRoom = (students: Student[], roomId: string): Student[] => {
+export const getStudentsByRoom = (
+  students: Student[],
+  roomId: string,
+): Student[] => {
   return students.filter((s) => s.roomId === roomId);
 };
 
@@ -51,7 +59,10 @@ export const getRoomById = (rooms: Room[], roomId: string): Room | null => {
   return rooms.find((r) => r.id === roomId) || null;
 };
 
-export const getStudentById = (students: Student[], studentId: string): Student | null => {
+export const getStudentById = (
+  students: Student[],
+  studentId: string,
+): Student | null => {
   return students.find((s) => s.id === studentId) || null;
 };
 
@@ -72,7 +83,7 @@ export const validateMobileNumber = (phone: string): boolean => {
 };
 
 export const isOverdue = (dueDate: string | Date): boolean => {
-  const date = typeof dueDate === 'string' ? new Date(dueDate) : dueDate;
+  const date = typeof dueDate === "string" ? new Date(dueDate) : dueDate;
   return new Date() > date;
 };
 
@@ -84,7 +95,10 @@ export const getCurrentWeek = (): number => {
   return Math.floor(diff / oneWeek);
 };
 
-export const groupBy = <T, K extends keyof T>(array: T[], key: K): Record<string, T[]> => {
+export const groupBy = <T, K extends keyof T>(
+  array: T[],
+  key: K,
+): Record<string, T[]> => {
   return array.reduce(
     (result, item) => {
       const group = String(item[key]);
@@ -94,39 +108,42 @@ export const groupBy = <T, K extends keyof T>(array: T[], key: K): Record<string
       result[group].push(item);
       return result;
     },
-    {} as Record<string, T[]>
+    {} as Record<string, T[]>,
   );
 };
 
 export const exportToCSV = (data: any[], filename: string): void => {
   if (!data || data.length === 0) {
-    console.error('No data to export');
+    console.error("No data to export");
     return;
   }
 
   const headers = Object.keys(data[0]);
   const csv = [
-    headers.join(','),
+    headers.join(","),
     ...data.map((row) =>
       headers
         .map((header) => {
           const value = row[header];
           // Handle commas and quotes in values
-          if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+          if (
+            typeof value === "string" &&
+            (value.includes(",") || value.includes('"'))
+          ) {
             return `"${value.replace(/"/g, '""')}"`;
           }
           return value;
         })
-        .join(',')
+        .join(","),
     ),
-  ].join('\n');
+  ].join("\n");
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', `${filename}.csv`);
-  link.style.visibility = 'hidden';
+  link.setAttribute("href", url);
+  link.setAttribute("download", `${filename}.csv`);
+  link.style.visibility = "hidden";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -136,7 +153,10 @@ export const generateReceiptNo = (): string => {
   return `RCP${Date.now()}${Math.random().toString(36).substring(2, 5)}`;
 };
 
-export const calculateFine = (dueDate: string, ratePerDay: number = 10): number => {
+export const calculateFine = (
+  dueDate: string,
+  ratePerDay: number = 10,
+): number => {
   const due = new Date(dueDate);
   const now = new Date();
   const diffTime = Math.max(0, now.getTime() - due.getTime());
@@ -145,7 +165,7 @@ export const calculateFine = (dueDate: string, ratePerDay: number = 10): number 
 };
 
 export const getDaysUntil = (date: string | Date): number => {
-  const targetDate = typeof date === 'string' ? new Date(date) : date;
+  const targetDate = typeof date === "string" ? new Date(date) : date;
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   targetDate.setHours(0, 0, 0, 0);
@@ -155,13 +175,13 @@ export const getDaysUntil = (date: string | Date): number => {
 
 export const getTimeAgo = (date: string | Date): string => {
   const now = new Date();
-  const targetDate = typeof date === 'string' ? new Date(date) : date;
+  const targetDate = typeof date === "string" ? new Date(date) : date;
   const diffMs = now.getTime() - targetDate.getTime();
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'Just now';
+  if (diffMins < 1) return "Just now";
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 30) return `${diffDays}d ago`;
@@ -169,10 +189,14 @@ export const getTimeAgo = (date: string | Date): string => {
   return formatDate(targetDate);
 };
 
-export const getCapacityNumber = (capacity: 'Single' | 'Double' | 'Triple'): number => {
-  return capacity === 'Single' ? 1 : capacity === 'Double' ? 2 : 3;
+export const getCapacityNumber = (
+  capacity: "Single" | "Double" | "Triple",
+): number => {
+  return capacity === "Single" ? 1 : capacity === "Double" ? 2 : 3;
 };
 
-export const cn = (...classes: (string | undefined | null | false)[]): string => {
-  return classes.filter(Boolean).join(' ');
+export const cn = (
+  ...classes: (string | undefined | null | false)[]
+): string => {
+  return classes.filter(Boolean).join(" ");
 };

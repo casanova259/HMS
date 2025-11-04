@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: "sm" | "md" | "lg" | "xl";
   closeButton?: boolean;
 }
 
 const sizeClasses = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl',
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
 };
 
 export const Modal = ({
@@ -22,7 +22,7 @@ export const Modal = ({
   onClose,
   title,
   children,
-  size = 'md',
+  size = "md",
   closeButton = true,
 }: ModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -43,14 +43,14 @@ export const Modal = ({
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-200 ${
-        isAnimating ? 'opacity-100' : 'opacity-0'
+        isAnimating ? "opacity-100" : "opacity-0"
       }`}
       onClick={() => handleClose()}
     >
       <div className="absolute inset-0 bg-black/50" />
       <div
         className={`relative w-full ${sizeClasses[size]} mx-4 bg-white rounded-lg shadow-lg transform transition-all duration-200 ${
-          isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          isAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,6 +1,6 @@
-import { Modal } from './Modal';
-import { AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
-import { cn } from '@/utils/formatting';
+import { Modal } from "./Modal";
+import { AlertTriangle, CheckCircle, AlertCircle } from "lucide-react";
+import { cn } from "@/utils/formatting";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
   title: string;
   message: string;
-  type?: 'danger' | 'success' | 'warning';
+  type?: "danger" | "success" | "warning";
   confirmText?: string;
   cancelText?: string;
   isLoading?: boolean;
@@ -20,21 +20,21 @@ export const ConfirmDialog = ({
   onConfirm,
   title,
   message,
-  type = 'warning',
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  type = "warning",
+  confirmText = "Confirm",
+  cancelText = "Cancel",
   isLoading = false,
 }: ConfirmDialogProps) => {
   const iconMap = {
-    danger: { icon: AlertTriangle, color: 'text-red-600' },
-    success: { icon: CheckCircle, color: 'text-green-600' },
-    warning: { icon: AlertCircle, color: 'text-yellow-600' },
+    danger: { icon: AlertTriangle, color: "text-red-600" },
+    success: { icon: CheckCircle, color: "text-green-600" },
+    warning: { icon: AlertCircle, color: "text-yellow-600" },
   };
 
   const buttonMap = {
-    danger: 'bg-red-600 hover:bg-red-700 text-white',
-    success: 'bg-green-600 hover:bg-green-700 text-white',
-    warning: 'bg-yellow-600 hover:bg-yellow-700 text-white',
+    danger: "bg-red-600 hover:bg-red-700 text-white",
+    success: "bg-green-600 hover:bg-green-700 text-white",
+    warning: "bg-yellow-600 hover:bg-yellow-700 text-white",
   };
 
   const { icon: Icon, color } = iconMap[type];
@@ -42,7 +42,7 @@ export const ConfirmDialog = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
       <div className="flex gap-4">
-        <Icon className={cn('w-6 h-6 flex-shrink-0', color)} />
+        <Icon className={cn("w-6 h-6 flex-shrink-0", color)} />
         <div className="flex-1">
           <p className="text-gray-700">{message}</p>
         </div>
@@ -59,12 +59,12 @@ export const ConfirmDialog = ({
         <button
           onClick={onConfirm}
           className={cn(
-            'px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50',
-            buttonMap[type]
+            "px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50",
+            buttonMap[type],
           )}
           disabled={isLoading}
         >
-          {isLoading ? 'Please wait...' : confirmText}
+          {isLoading ? "Please wait..." : confirmText}
         </button>
       </div>
     </Modal>

@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Users, BookOpen, ClipboardList } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Users, BookOpen, ClipboardList } from "lucide-react";
 
-type UserRole = 'Warden' | 'Librarian' | 'HOD';
+type UserRole = "Warden" | "Librarian" | "HOD";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<UserRole>('Warden');
+  const [selectedRole, setSelectedRole] = useState<UserRole>("Warden");
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    staffId: '',
-    password: '',
+    name: "",
+    email: "",
+    staffId: "",
+    password: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -23,7 +23,7 @@ export default function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Store user info in localStorage
     const userInfo = {
       role: selectedRole,
@@ -32,14 +32,14 @@ export default function Login() {
       staffId: formData.staffId,
       loginTime: new Date().toISOString(),
     };
-    localStorage.setItem('currentUser', JSON.stringify(userInfo));
-    
+    localStorage.setItem("currentUser", JSON.stringify(userInfo));
+
     // Redirect to dashboard
-    navigate('/');
+    navigate("/");
   };
 
   const handleFaceRecognition = () => {
-    alert('Face Recognition login coming soon!');
+    alert("Face Recognition login coming soon!");
   };
 
   return (
@@ -51,17 +51,19 @@ export default function Login() {
             <Users className="w-8 h-8 text-blue-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">College Name</h1>
-          <p className="text-gray-600 text-sm mt-2">Select your role to begin</p>
+          <p className="text-gray-600 text-sm mt-2">
+            Select your role to begin
+          </p>
         </div>
 
         {/* Role Selection */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <button
-            onClick={() => setSelectedRole('Warden')}
+            onClick={() => setSelectedRole("Warden")}
             className={`p-4 rounded-lg border-2 transition-all text-center ${
-              selectedRole === 'Warden'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+              selectedRole === "Warden"
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
             <Users className="w-6 h-6 mx-auto mb-2 text-blue-600" />
@@ -69,11 +71,11 @@ export default function Login() {
           </button>
 
           <button
-            onClick={() => setSelectedRole('Librarian')}
+            onClick={() => setSelectedRole("Librarian")}
             className={`p-4 rounded-lg border-2 transition-all text-center ${
-              selectedRole === 'Librarian'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+              selectedRole === "Librarian"
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
             <BookOpen className="w-6 h-6 mx-auto mb-2 text-blue-600" />
@@ -81,11 +83,11 @@ export default function Login() {
           </button>
 
           <button
-            onClick={() => setSelectedRole('HOD')}
+            onClick={() => setSelectedRole("HOD")}
             className={`p-4 rounded-lg border-2 transition-all text-center ${
-              selectedRole === 'HOD'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+              selectedRole === "HOD"
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
             <ClipboardList className="w-6 h-6 mx-auto mb-2 text-blue-600" />
@@ -96,11 +98,13 @@ export default function Login() {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Name
+            </label>
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
+              onChange={(e) => handleInputChange("name", e.target.value)}
               placeholder="Enter your name"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -108,11 +112,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email ID</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email ID
+            </label>
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
+              onChange={(e) => handleInputChange("email", e.target.value)}
               placeholder="Enter your email ID"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -120,11 +126,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Staff ID</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Staff ID
+            </label>
             <input
               type="text"
               value={formData.staffId}
-              onChange={(e) => handleInputChange('staffId', e.target.value)}
+              onChange={(e) => handleInputChange("staffId", e.target.value)}
               placeholder="Enter your staff ID"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -132,11 +140,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
             <input
               type="password"
               value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
+              onChange={(e) => handleInputChange("password", e.target.value)}
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

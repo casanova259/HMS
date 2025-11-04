@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Eye, AlertCircle, Wrench } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Badge } from '@/components/common/Badge';
-import { SearchBar } from '@/components/common/SearchBar';
-import { localStorageService } from '@/services/localStorage';
-import { formatDate, getStudentsByRoom } from '@/utils/formatting';
-import { Room, Student } from '@/types';
+import { useState, useEffect, useMemo } from "react";
+import { Eye, AlertCircle, Wrench } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { Badge } from "@/components/common/Badge";
+import { SearchBar } from "@/components/common/SearchBar";
+import { localStorageService } from "@/services/localStorage";
+import { formatDate, getStudentsByRoom } from "@/utils/formatting";
+import { Room, Student } from "@/types";
 
 export default function Rooms() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -14,11 +14,11 @@ export default function Rooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filters
-  const [floorFilter, setFloorFilter] = useState<string>('All');
-  const [blockFilter, setBlockFilter] = useState<string>('All');
-  const [statusFilter, setStatusFilter] = useState<string>('All');
-  const [capacityFilter, setCapacityFilter] = useState<string>('All');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [floorFilter, setFloorFilter] = useState<string>("All");
+  const [blockFilter, setBlockFilter] = useState<string>("All");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
+  const [capacityFilter, setCapacityFilter] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     setRooms(localStorageService.getRooms());
@@ -28,14 +28,22 @@ export default function Rooms() {
   // Filtered rooms
   const filteredRooms = useMemo(() => {
     return rooms.filter((room) => {
-      if (floorFilter !== 'All' && room.floor !== floorFilter) return false;
-      if (blockFilter !== 'All' && room.block !== blockFilter) return false;
-      if (statusFilter !== 'All' && room.status !== statusFilter) return false;
-      if (capacityFilter !== 'All' && room.capacity !== capacityFilter) return false;
+      if (floorFilter !== "All" && room.floor !== floorFilter) return false;
+      if (blockFilter !== "All" && room.block !== blockFilter) return false;
+      if (statusFilter !== "All" && room.status !== statusFilter) return false;
+      if (capacityFilter !== "All" && room.capacity !== capacityFilter)
+        return false;
       if (searchTerm && !room.number.includes(searchTerm)) return false;
       return true;
     });
-  }, [rooms, floorFilter, blockFilter, statusFilter, capacityFilter, searchTerm]);
+  }, [
+    rooms,
+    floorFilter,
+    blockFilter,
+    statusFilter,
+    capacityFilter,
+    searchTerm,
+  ]);
 
   const handleRoomClick = (room: Room) => {
     setSelectedRoom(room);
@@ -44,14 +52,14 @@ export default function Rooms() {
 
   const getRoomBorderColor = (status: string) => {
     switch (status) {
-      case 'Occupied':
-        return 'border-purple-500 bg-purple-50';
-      case 'Empty':
-        return 'border-gray-300 bg-gray-50';
-      case 'Maintenance':
-        return 'border-orange-500 bg-orange-50';
+      case "Occupied":
+        return "border-purple-500 bg-purple-50";
+      case "Empty":
+        return "border-gray-300 bg-gray-50";
+      case "Maintenance":
+        return "border-orange-500 bg-orange-50";
       default:
-        return 'border-gray-300 bg-gray-50';
+        return "border-gray-300 bg-gray-50";
     }
   };
 
@@ -61,7 +69,7 @@ export default function Rooms() {
 
   const allPaymentsPaid = (roomId: string) => {
     const roomStudents = getRoomStudents(roomId);
-    return roomStudents.every((s) => s.paymentStatus === 'Paid');
+    return roomStudents.every((s) => s.paymentStatus === "Paid");
   };
 
   return (
@@ -76,7 +84,9 @@ export default function Rooms() {
       <div className="bg-white rounded-lg p-6 shadow space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Floor</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Floor
+            </label>
             <select
               value={floorFilter}
               onChange={(e) => setFloorFilter(e.target.value)}
@@ -91,7 +101,9 @@ export default function Rooms() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Block</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Block
+            </label>
             <select
               value={blockFilter}
               onChange={(e) => setBlockFilter(e.target.value)}
@@ -105,7 +117,9 @@ export default function Rooms() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status
+            </label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -119,7 +133,9 @@ export default function Rooms() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Capacity</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Capacity
+            </label>
             <select
               value={capacityFilter}
               onChange={(e) => setCapacityFilter(e.target.value)}
@@ -133,19 +149,25 @@ export default function Rooms() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search Room</label>
-            <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Room number..." />
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Room
+            </label>
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Room number..."
+            />
           </div>
         </div>
 
         <div className="flex gap-2">
           <button
             onClick={() => {
-              setFloorFilter('All');
-              setBlockFilter('All');
-              setStatusFilter('All');
-              setCapacityFilter('All');
-              setSearchTerm('');
+              setFloorFilter("All");
+              setBlockFilter("All");
+              setStatusFilter("All");
+              setCapacityFilter("All");
+              setSearchTerm("");
             }}
             className="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors text-sm"
           >
@@ -162,31 +184,41 @@ export default function Rooms() {
         {filteredRooms.length > 0 ? (
           filteredRooms.map((room) => {
             const roomStudents = getRoomStudents(room.id);
-            const paymentStatus = allPaymentsPaid(room.id) ? 'Paid' : 'Pending';
+            const paymentStatus = allPaymentsPaid(room.id) ? "Paid" : "Pending";
 
             return (
               <div
                 key={room.id}
                 onClick={() => handleRoomClick(room)}
                 className={`border-2 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow ${getRoomBorderColor(
-                  room.status
+                  room.status,
                 )}`}
               >
                 {/* Room Number */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{room.number}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {room.number}
+                </h3>
 
                 {/* Occupancy Badge */}
                 <div className="mb-4">
                   <Badge
-                    label={`${room.occupancy}/${room.capacity === 'Single' ? 1 : room.capacity === 'Double' ? 2 : 3} Occupied`}
-                    status={room.status === 'Occupied' ? 'occupied' : room.status === 'Empty' ? 'empty' : 'maintenance'}
+                    label={`${room.occupancy}/${room.capacity === "Single" ? 1 : room.capacity === "Double" ? 2 : 3} Occupied`}
+                    status={
+                      room.status === "Occupied"
+                        ? "occupied"
+                        : room.status === "Empty"
+                          ? "empty"
+                          : "maintenance"
+                    }
                   />
                 </div>
 
                 {/* Status-specific content */}
-                {room.status === 'Occupied' && (
+                {room.status === "Occupied" && (
                   <div className="mb-4 space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">Students:</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Students:
+                    </p>
                     {roomStudents.map((student) => (
                       <p key={student.id} className="text-sm text-gray-600">
                         👤 {student.fullName}
@@ -195,31 +227,40 @@ export default function Rooms() {
                   </div>
                 )}
 
-                {room.status === 'Empty' && (
-                  <p className="text-sm text-gray-600 mb-4">✅ Available for allocation</p>
+                {room.status === "Empty" && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    ✅ Available for allocation
+                  </p>
                 )}
 
-                {room.status === 'Maintenance' && (
+                {room.status === "Maintenance" && (
                   <div className="mb-4 p-3 bg-orange-100 rounded-lg">
                     <p className="text-sm text-orange-800">
                       <Wrench className="inline w-4 h-4 mr-2" />
-                      {room.maintenanceIssue || 'Under maintenance'}
+                      {room.maintenanceIssue || "Under maintenance"}
                     </p>
                   </div>
                 )}
 
                 {/* Amenities */}
                 <div className="mb-4 text-xs text-gray-600 space-y-1">
-                  <p>🌀 Fans: {room.amenities.fans}/{room.amenities.fans}</p>
-                  <p>💡 Lights: {room.amenities.lights}/{room.amenities.lights}</p>
-                  <p>📊 Available: {room.amenities.tables}/{room.amenities.tables}</p>
+                  <p>
+                    🌀 Fans: {room.amenities.fans}/{room.amenities.fans}
+                  </p>
+                  <p>
+                    💡 Lights: {room.amenities.lights}/{room.amenities.lights}
+                  </p>
+                  <p>
+                    📊 Available: {room.amenities.tables}/
+                    {room.amenities.tables}
+                  </p>
                 </div>
 
                 {/* Payment Status */}
                 <div className="mb-4">
                   <Badge
-                    label={`${paymentStatus === 'Paid' ? 'All' : 'Payment'} ${paymentStatus}`}
-                    status={paymentStatus === 'Paid' ? 'paid' : 'unpaid'}
+                    label={`${paymentStatus === "Paid" ? "All" : "Payment"} ${paymentStatus}`}
+                    status={paymentStatus === "Paid" ? "paid" : "unpaid"}
                   />
                 </div>
 
@@ -240,7 +281,9 @@ export default function Rooms() {
         ) : (
           <div className="col-span-full text-center py-12">
             <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-600">No rooms found matching your filters</p>
+            <p className="text-gray-600">
+              No rooms found matching your filters
+            </p>
           </div>
         )}
       </div>
@@ -256,37 +299,63 @@ export default function Rooms() {
           <div className="space-y-6">
             {/* Room Info Section */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Room Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Room Information
+              </h3>
               <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
                 <div>
                   <p className="text-sm text-gray-600">Room Number</p>
-                  <p className="font-semibold text-gray-900">{selectedRoom.number}</p>
+                  <p className="font-semibold text-gray-900">
+                    {selectedRoom.number}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Status</p>
-                  <Badge label={selectedRoom.status} status={selectedRoom.status === 'Occupied' ? 'occupied' : selectedRoom.status === 'Empty' ? 'empty' : 'maintenance'} />
+                  <Badge
+                    label={selectedRoom.status}
+                    status={
+                      selectedRoom.status === "Occupied"
+                        ? "occupied"
+                        : selectedRoom.status === "Empty"
+                          ? "empty"
+                          : "maintenance"
+                    }
+                  />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Floor</p>
-                  <p className="font-semibold text-gray-900">{selectedRoom.floor}</p>
+                  <p className="font-semibold text-gray-900">
+                    {selectedRoom.floor}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Block</p>
-                  <p className="font-semibold text-gray-900">{selectedRoom.block}</p>
+                  <p className="font-semibold text-gray-900">
+                    {selectedRoom.block}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Capacity</p>
-                  <p className="font-semibold text-gray-900">{selectedRoom.capacity}</p>
+                  <p className="font-semibold text-gray-900">
+                    {selectedRoom.capacity}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Occupancy</p>
                   <p className="font-semibold text-gray-900">
-                    {selectedRoom.occupancy}/{selectedRoom.capacity === 'Single' ? 1 : selectedRoom.capacity === 'Double' ? 2 : 3}
+                    {selectedRoom.occupancy}/
+                    {selectedRoom.capacity === "Single"
+                      ? 1
+                      : selectedRoom.capacity === "Double"
+                        ? 2
+                        : 3}
                   </p>
                 </div>
                 <div className="col-span-2">
                   <p className="text-sm text-gray-600">Last Inspection</p>
-                  <p className="font-semibold text-gray-900">{formatDate(selectedRoom.lastInspection)}</p>
+                  <p className="font-semibold text-gray-900">
+                    {formatDate(selectedRoom.lastInspection)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -294,33 +363,55 @@ export default function Rooms() {
             {/* Students Section */}
             {getRoomStudents(selectedRoom.id).length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Allocated Students</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Allocated Students
+                </h3>
                 <div className="space-y-4">
                   {getRoomStudents(selectedRoom.id).map((student) => (
-                    <div key={student.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    <div
+                      key={student.id}
+                      className="border rounded-lg p-4 hover:bg-gray-50"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <p className="font-semibold text-gray-900">{student.fullName}</p>
-                          <p className="text-sm text-gray-600">{student.rollNumber}</p>
+                          <p className="font-semibold text-gray-900">
+                            {student.fullName}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {student.rollNumber}
+                          </p>
                         </div>
-                        <Badge label={student.paymentStatus} status={student.paymentStatus === 'Paid' ? 'paid' : 'unpaid'} />
+                        <Badge
+                          label={student.paymentStatus}
+                          status={
+                            student.paymentStatus === "Paid" ? "paid" : "unpaid"
+                          }
+                        />
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-gray-600">Department</p>
-                          <p className="font-medium text-gray-900">{student.class}</p>
+                          <p className="font-medium text-gray-900">
+                            {student.class}
+                          </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Semester</p>
-                          <p className="font-medium text-gray-900">{student.semester}</p>
+                          <p className="font-medium text-gray-900">
+                            {student.semester}
+                          </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Bed Number</p>
-                          <p className="font-medium text-gray-900">Bed {student.bedNumber || 'N/A'}</p>
+                          <p className="font-medium text-gray-900">
+                            Bed {student.bedNumber || "N/A"}
+                          </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Contact</p>
-                          <p className="font-medium text-gray-900">{student.mobileNumber}</p>
+                          <p className="font-medium text-gray-900">
+                            {student.mobileNumber}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -331,29 +422,47 @@ export default function Rooms() {
 
             {/* Amenities Section */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Amenities</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Amenities
+              </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-gray-50">
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Item</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Quantity</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                        Item
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                        Quantity
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(selectedRoom.amenities).map(([key, value]) => (
-                      <tr key={key} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-gray-900 capitalize">{key}</td>
-                        <td className="py-3 px-4 text-gray-700">{value}</td>
-                        <td className="py-3 px-4">
-                          <Badge
-                            label={selectedRoom.amenityStatus[key] || 'Working'}
-                            status={selectedRoom.amenityStatus[key] === 'Working' ? 'completed' : 'pending'}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    {Object.entries(selectedRoom.amenities).map(
+                      ([key, value]) => (
+                        <tr key={key} className="border-b hover:bg-gray-50">
+                          <td className="py-3 px-4 font-medium text-gray-900 capitalize">
+                            {key}
+                          </td>
+                          <td className="py-3 px-4 text-gray-700">{value}</td>
+                          <td className="py-3 px-4">
+                            <Badge
+                              label={
+                                selectedRoom.amenityStatus[key] || "Working"
+                              }
+                              status={
+                                selectedRoom.amenityStatus[key] === "Working"
+                                  ? "completed"
+                                  : "pending"
+                              }
+                            />
+                          </td>
+                        </tr>
+                      ),
+                    )}
                   </tbody>
                 </table>
               </div>

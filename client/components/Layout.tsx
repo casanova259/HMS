@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Menu,
   X,
@@ -13,25 +13,25 @@ import {
   ThumbsUp,
   Bell,
   BarChart3,
-} from 'lucide-react';
-import { cn } from '@/utils/formatting';
-import { ToastContainer, useToast } from './common/Toast';
+} from "lucide-react";
+import { cn } from "@/utils/formatting";
+import { ToastContainer, useToast } from "./common/Toast";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const MENU_ITEMS = [
-  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { label: 'Rooms', href: '/rooms', icon: Building2 },
-  { label: 'Students', href: '/students', icon: Users },
-  { label: 'Maintenance', href: '/maintenance', icon: Wrench },
-  { label: 'Complaints', href: '/complaints', icon: MessageSquare },
-  { label: 'Payments', href: '/payments', icon: CreditCard },
-  { label: 'Menu', href: '/menu', icon: UtensilsCrossed },
-  { label: 'Food Requests', href: '/food-requests', icon: ThumbsUp },
-  { label: 'Announcements', href: '/announcements', icon: Bell },
-  { label: 'Reports', href: '/reports', icon: BarChart3 },
+  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Rooms", href: "/rooms", icon: Building2 },
+  { label: "Students", href: "/students", icon: Users },
+  { label: "Maintenance", href: "/maintenance", icon: Wrench },
+  { label: "Complaints", href: "/complaints", icon: MessageSquare },
+  { label: "Payments", href: "/payments", icon: CreditCard },
+  { label: "Menu", href: "/menu", icon: UtensilsCrossed },
+  { label: "Food Requests", href: "/food-requests", icon: ThumbsUp },
+  { label: "Announcements", href: "/announcements", icon: Bell },
+  { label: "Reports", href: "/reports", icon: BarChart3 },
 ];
 
 export const Layout = ({ children }: LayoutProps) => {
@@ -44,8 +44,8 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed md:static md:block bg-white border-r border-gray-200 transition-all duration-300 z-40 h-screen overflow-y-auto',
-          sidebarOpen ? 'w-64' : 'w-0 md:w-64'
+          "fixed md:static md:block bg-white border-r border-gray-200 transition-all duration-300 z-40 h-screen overflow-y-auto",
+          sidebarOpen ? "w-64" : "w-0 md:w-64",
         )}
       >
         <div className="p-6 border-b border-gray-200">
@@ -64,10 +64,10 @@ export const Layout = ({ children }: LayoutProps) => {
                 to={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors',
+                  "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100",
                 )}
               >
                 <Icon className="w-5 h-5" />
