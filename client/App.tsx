@@ -14,6 +14,7 @@ import { seedInitialData } from "@/data/seedData";
 import Dashboard from "@/pages/Dashboard";
 import Rooms from "@/pages/Rooms";
 import Maintenance from "@/pages/Maintenance";
+import Students from "@/pages/Students";
 import NotFound from "@/pages/NotFound";
 
 // Placeholder pages
