@@ -53,22 +53,111 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/rooms" element={<Rooms />} />
-              <Route path="/students" element={<Students />} />
-              <Route path="/maintenance" element={<Maintenance />} />
-              <Route path="/complaints" element={<PlaceholderPage title="Complaints" />} />
-              <Route path="/payments" element={<PlaceholderPage title="Payments" />} />
-              <Route path="/menu" element={<PlaceholderPage title="Menu Management" />} />
-              <Route path="/food-requests" element={<PlaceholderPage title="Food Requests" />} />
-              <Route path="/announcements" element={<PlaceholderPage title="Announcements" />} />
-              <Route path="/reports" element={<PlaceholderPage title="Reports" />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rooms"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Rooms />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Students />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/maintenance"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Maintenance />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/complaints"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Complaints />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payments"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Payments />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/menu"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Menu />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/food-requests"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <FoodRequests />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/announcements"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PlaceholderPage title="Announcements" />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Reports />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
