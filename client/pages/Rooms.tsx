@@ -421,7 +421,7 @@ export default function Rooms() {
             )}
 
             {/* Amenities Section */}
-            <div className="col-span-2">
+            <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Amenities
               </h3>
