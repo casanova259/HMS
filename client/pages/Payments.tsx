@@ -12,6 +12,8 @@ export default function Payments() {
   const [statusFilter, setStatusFilter] = useState<"All" | "Paid" | "Unpaid">(
     "All",
   );
+  const [yearFilter, setYearFilter] = useState<string>("All");
+  const [batchFilter, setBatchFilter] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
