@@ -296,7 +296,7 @@ export default function Rooms() {
           title={`Room ${selectedRoom.number} Details`}
           size="lg"
         >
-          <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-4">
             {/* Room Info Section */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
