@@ -362,7 +362,7 @@ export default function Rooms() {
 
             {/* Students Section */}
             {getRoomStudents(selectedRoom.id).length > 0 && (
-              <div className="col-span-2">
+              <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Allocated Students
                 </h3>
