@@ -88,7 +88,11 @@ export default function Menu() {
   };
 
   const getDietaryColor = (dietary: string) => {
-    return dietary === 'Veg' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800';
+    if (dietary === 'Veg') {
+      return 'bg-green-100 text-green-700';
+    } else {
+      return 'bg-orange-100 text-orange-700';
+    }
   };
 
   if (!currentMenu) {
@@ -102,90 +106,80 @@ export default function Menu() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mess Menu</h1>
+          <h1 className="text-4xl font-bold text-gray-900">Mess Menu</h1>
           <p className="text-gray-600 mt-2">Week of Oct 28 - Nov 3, 2024</p>
         </div>
         <button
           onClick={() => setIsEditMode(!isEditMode)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
         >
-          <Edit2 className="w-4 h-4" />
-          {isEditMode ? 'Done Editing' : 'Edit Menu'}
+          <Edit2 className="w-5 h-5" />
+          Edit Menu
         </button>
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-3">
         <button
           onClick={handlePreviousWeek}
-          className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700"
         >
-          <ChevronLeft className="w-5 h-5" />
+          Previous
         </button>
-        <div className="flex gap-3 text-center">
-          <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
-            Previous
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
-            Current
-          </button>
-          <button
-            onClick={handleNextWeek}
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium"
-          >
-            Next
-          </button>
-        </div>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+          Current
+        </button>
         <button
           onClick={handleNextWeek}
-          className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700"
         >
-          <ChevronRight className="w-5 h-5" />
+          Next
         </button>
       </div>
 
       {/* Menu Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-100 border-b-2 border-gray-300">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900 w-20">Day</th>
+          <thead>
+            <tr className="bg-gray-100 border-b-2 border-gray-300">
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Day</th>
               {MEALS.map((meal) => (
                 <th key={meal} className="px-6 py-4 text-left text-sm font-bold text-gray-900">
-                  <div>{meal}</div>
-                  <div className="text-xs font-normal text-gray-600">
-                    {MEAL_TIMES[meal as keyof typeof MEAL_TIMES]}
-                  </div>
+                  {meal} <br />
+                  <span className="text-xs font-normal text-gray-600">
+                    ({MEAL_TIMES[meal as keyof typeof MEAL_TIMES]})
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {DAYS.map((day) => (
-              <tr key={day} className="border-b">
-                <td className="px-6 py-4 font-bold text-gray-900 bg-gray-50">{day}</td>
+              <tr key={day} className="border-b hover:bg-gray-50">
+                <td className="px-6 py-6 font-semibold text-gray-900 bg-gray-50 w-24">{day}</td>
                 {MEALS.map((meal) => {
                   const dayData = currentMenu[day as keyof WeeklyMenu] as any;
                   const dishes = dayData?.[meal] || [];
-                  const isDominantlyVeg = dishes.some((d: MenuItem) => d.dietary === 'Veg');
 
                   return (
                     <td
                       key={`${day}-${meal}`}
-                      className={`px-6 py-4 cursor-pointer transition-colors ${
-                        isDominantlyVeg ? 'bg-green-50' : 'bg-orange-50'
+                      className={`px-6 py-6 cursor-pointer transition-colors ${
+                        dishes.some((d: MenuItem) => d.dietary === 'Veg')
+                          ? 'bg-green-50'
+                          : dishes.length > 0
+                          ? 'bg-orange-50'
+                          : 'bg-white'
                       }`}
                       onClick={() => handleEditCell(day, meal)}
                     >
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {dishes.map((dish: MenuItem, index: number) => (
-                          <div key={index} className="flex items-start justify-between gap-2">
-                            <div className="flex-1">
-                              <p className="font-medium text-sm text-gray-900">{dish.name}</p>
-                              <p className="text-xs text-gray-600">{dish.dietary}</p>
-                            </div>
+                          <div key={index} className={`p-2 rounded ${getDietaryColor(dish.dietary)}`}>
+                            <p className="font-semibold text-sm">{dish.name}</p>
+                            <p className="text-xs opacity-75">{dish.dietary}</p>
                             {isEditMode && (
                               <button
                                 onClick={(e) => {
@@ -193,20 +187,20 @@ export default function Menu() {
                                   setEditingCell({ day, meal, isOpen: true });
                                   handleRemoveDish(index);
                                 }}
-                                className="text-red-600 hover:text-red-700 font-bold"
+                                className="text-red-600 hover:text-red-700 font-bold text-xs mt-1"
                               >
-                                ×
+                                Remove
                               </button>
                             )}
                           </div>
                         ))}
-                        {isEditMode && dishes.length === 0 && (
+                        {isEditMode && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setEditingCell({ day, meal, isOpen: true });
                             }}
-                            className="text-blue-600 text-xs font-medium hover:text-blue-700"
+                            className="text-blue-600 text-xs font-medium hover:text-blue-700 w-full py-1 hover:bg-blue-50 rounded"
                           >
                             + Add items
                           </button>
@@ -222,13 +216,13 @@ export default function Menu() {
       </div>
 
       {/* Legend */}
-      <div className="flex gap-6 justify-center text-sm">
+      <div className="flex gap-8 justify-center text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
+          <div className="w-6 h-6 bg-green-100 rounded"></div>
           <span className="text-gray-700">Vegetarian</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-orange-100 border border-orange-300 rounded"></div>
+          <div className="w-6 h-6 bg-orange-100 rounded"></div>
           <span className="text-gray-700">Non-vegetarian</span>
         </div>
       </div>
