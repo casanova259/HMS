@@ -298,11 +298,11 @@ export default function Rooms() {
         >
           <div className="grid grid-cols-2 gap-6">
             {/* Room Info Section */}
-            <div className="col-span-1">
+            <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Room Information
               </h3>
-              <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+              <div className="grid grid-cols-3 gap-3 bg-gray-50 p-4 rounded-lg">
                 <div>
                   <p className="text-sm text-gray-600">Room Number</p>
                   <p className="font-semibold text-gray-900">
