@@ -94,11 +94,22 @@ export const Layout = ({ children }: LayoutProps) => {
           </button>
 
           <h1 className="text-2xl font-bold text-gray-900 flex-1 text-center md:text-left">
-            Hostel Management System
+            Mimit Hostel Management
           </h1>
 
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-            W
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                localStorage.removeItem('currentUser');
+                window.location.href = '/login';
+              }}
+              className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium text-sm"
+            >
+              Logout
+            </button>
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+              W
+            </div>
           </div>
         </header>
 
