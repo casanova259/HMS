@@ -146,7 +146,7 @@ const generateStudents = (rooms: Room[]): Student[] => {
   const students: Student[] = [];
   const sessions = ["2024-25", "2023-24", "2022-23"];
 
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 200; i++) {
     const firstName =
       FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
     const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
