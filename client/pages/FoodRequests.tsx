@@ -138,13 +138,15 @@ export default function FoodRequests() {
             Review and manage dish requests submitted by students.
           </p>
         </div>
-        <button
-          onClick={() => setShowNewRequestModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          Request Dish
-        </button>
+        {currentUser?.role !== "Warden" && (
+          <button
+            onClick={() => setShowNewRequestModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            Request Dish
+          </button>
+        )}
       </div>
 
       {/* Active Requests */}
@@ -153,13 +155,20 @@ export default function FoodRequests() {
           Vote for Your Favorite Dish
         </h2>
         <p className="text-gray-600 mb-4">
-          Voting closes in{" "}
-          {Math.max(
-            0,
-            getDaysUntil(activeRequests[0]?.closingDate || new Date()),
-          )}{" "}
-          days
-        </p>
+            Voting closes in{" "}
+            {Math.max(
+              0,
+              getDaysUntil(activeRequests[0]?.closingDate || new Date()),
+            )}{" "}
+            days
+          </p>
+          {currentUser?.role === "Warden" && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                <span className="font-semibold">Note:</span> As a Warden, you can review and vote on dishes but cannot submit new requests. Students can submit dish requests.
+              </p>
+            </div>
+          )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {activeRequests.length > 0 ? (
