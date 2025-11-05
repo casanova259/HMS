@@ -220,6 +220,22 @@ export interface Payment {
   updatedAt: string;
 }
 
+// No Due Form related types
+export interface NoDueForm {
+  id: string;
+  studentId: string;
+  studentName: string;
+  rollNumber: string;
+  requestDate: string;
+  libraryStatus: "Pending" | "Approved" | "Rejected";
+  libraryApprovedDate?: string;
+  wardenStatus: "Pending" | "Approved" | "Rejected";
+  wardenApprovedDate?: string;
+  wardenNotes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Dashboard stats
 export interface DashboardStats {
   totalRooms: number;
