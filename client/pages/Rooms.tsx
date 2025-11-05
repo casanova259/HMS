@@ -469,7 +469,7 @@ export default function Rooms() {
             </div>
 
             {/* Actions */}
-            <div className="col-span-2 flex gap-3 pt-4 border-t">
+            <div className="flex gap-3 pt-4 border-t">
               <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                 Change Room
               </button>
