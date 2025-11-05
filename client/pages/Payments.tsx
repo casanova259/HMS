@@ -1,23 +1,25 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Plus, Download, AlertCircle } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Badge } from '@/components/common/Badge';
-import { SearchBar } from '@/components/common/SearchBar';
-import { localStorageService } from '@/services/localStorage';
-import { formatCurrency, formatDate, exportToCSV } from '@/utils/formatting';
-import { Student } from '@/types';
+import { useState, useEffect, useMemo } from "react";
+import { Plus, Download, AlertCircle } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { Badge } from "@/components/common/Badge";
+import { SearchBar } from "@/components/common/SearchBar";
+import { localStorageService } from "@/services/localStorage";
+import { formatCurrency, formatDate, exportToCSV } from "@/utils/formatting";
+import { Student } from "@/types";
 
 export default function Payments() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [statusFilter, setStatusFilter] = useState<'All' | 'Paid' | 'Unpaid'>('All');
-  const [yearFilter, setYearFilter] = useState<string>('All');
-  const [batchFilter, setBatchFilter] = useState<string>('All');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<"All" | "Paid" | "Unpaid">(
+    "All",
+  );
+  const [yearFilter, setYearFilter] = useState<string>("All");
+  const [batchFilter, setBatchFilter] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
 
   const [newPayment, setNewPayment] = useState({
-    studentId: '',
-    transactionId: '',
+    studentId: "",
+    transactionId: "",
     paidAmount: 30000,
   });
 
@@ -28,9 +30,11 @@ export default function Payments() {
   const filteredStudents = useMemo(() => {
     return students
       .filter((s) => {
-        if (statusFilter !== 'All' && s.paymentStatus !== statusFilter) return false;
-        if (yearFilter !== 'All' && s.session !== yearFilter) return false;
-        if (batchFilter !== 'All' && s.semester !== parseInt(batchFilter)) return false;
+        if (statusFilter !== "All" && s.paymentStatus !== statusFilter)
+          return false;
+        if (yearFilter !== "All" && s.session !== yearFilter) return false;
+        if (batchFilter !== "All" && s.semester !== parseInt(batchFilter))
+          return false;
         if (searchTerm) {
           return (
             s.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,13 +50,15 @@ export default function Payments() {
             new Date(a.paymentDetails?.paidDate || 0).getTime()
           );
         }
-        return a.paymentStatus === 'Paid' ? -1 : 1;
+        return a.paymentStatus === "Paid" ? -1 : 1;
       });
   }, [students, statusFilter, yearFilter, batchFilter, searchTerm]);
 
   const stats = useMemo(() => {
-    const paidCount = students.filter((s) => s.paymentStatus === 'Paid').length;
-    const unpaidCount = students.filter((s) => s.paymentStatus === 'Unpaid').length;
+    const paidCount = students.filter((s) => s.paymentStatus === "Paid").length;
+    const unpaidCount = students.filter(
+      (s) => s.paymentStatus === "Unpaid",
+    ).length;
     const totalCollected = students.reduce((sum, s) => {
       return sum + (s.paymentDetails?.paidAmount || 0);
     }, 0);
@@ -72,7 +78,7 @@ export default function Payments() {
     if (!student) return;
 
     localStorageService.updateStudent(newPayment.studentId, {
-      paymentStatus: 'Paid',
+      paymentStatus: "Paid",
       paymentDetails: {
         transactionId: newPayment.transactionId,
         paidAmount: newPayment.paidAmount,
@@ -83,32 +89,32 @@ export default function Payments() {
     setStudents(localStorageService.getStudents());
     setShowAddPaymentModal(false);
     setNewPayment({
-      studentId: '',
-      transactionId: '',
+      studentId: "",
+      transactionId: "",
       paidAmount: 30000,
     });
   };
 
   const handleDownloadReport = () => {
     const reportData = filteredStudents.map((student) => ({
-      'Roll Number': student.rollNumber,
-      'Student Name': student.fullName,
-      'Email': student.email,
-      'Phone': student.mobileNumber,
-      'Year': student.session,
-      'Semester': student.semester,
-      'Payment Status': student.paymentStatus,
-      'Amount Paid': student.paymentDetails?.paidAmount || 0,
-      'Transaction ID': student.paymentDetails?.transactionId || 'N/A',
-      'Payment Date': student.paymentDetails?.paidDate || 'N/A',
-      'Room': student.roomId || 'Not Allocated',
+      "Roll Number": student.rollNumber,
+      "Student Name": student.fullName,
+      Email: student.email,
+      Phone: student.mobileNumber,
+      Year: student.session,
+      Semester: student.semester,
+      "Payment Status": student.paymentStatus,
+      "Amount Paid": student.paymentDetails?.paidAmount || 0,
+      "Transaction ID": student.paymentDetails?.transactionId || "N/A",
+      "Payment Date": student.paymentDetails?.paidDate || "N/A",
+      Room: student.roomId || "Not Allocated",
     }));
 
-    exportToCSV(reportData, 'payment_report');
+    exportToCSV(reportData, "payment_report");
   };
 
   const recentPayments = students
-    .filter((s) => s.paymentStatus === 'Paid' && s.paymentDetails?.paidDate)
+    .filter((s) => s.paymentStatus === "Paid" && s.paymentDetails?.paidDate)
     .sort((a, b) => {
       const dateA = new Date(a.paymentDetails?.paidDate || 0);
       const dateB = new Date(b.paymentDetails?.paidDate || 0);
@@ -117,8 +123,12 @@ export default function Payments() {
     .slice(0, 10);
 
   // Get unique years and batches
-  const uniqueYears = Array.from(new Set(students.map((s) => s.session))).sort().reverse();
-  const uniqueBatches = Array.from(new Set(students.map((s) => s.semester))).sort((a, b) => a - b);
+  const uniqueYears = Array.from(new Set(students.map((s) => s.session)))
+    .sort()
+    .reverse();
+  const uniqueBatches = Array.from(
+    new Set(students.map((s) => s.semester)),
+  ).sort((a, b) => a - b);
 
   return (
     <div className="space-y-6">
@@ -126,7 +136,9 @@ export default function Payments() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Payments</h1>
-          <p className="text-gray-600 mt-2">Manage student hostel fee payments</p>
+          <p className="text-gray-600 mt-2">
+            Manage student hostel fee payments
+          </p>
         </div>
         <div className="flex gap-2">
           <button
@@ -150,19 +162,27 @@ export default function Payments() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg p-6 shadow">
           <p className="text-gray-600 text-sm">Total Students</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{students.length}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">
+            {students.length}
+          </p>
         </div>
         <div className="bg-green-50 rounded-lg p-6 shadow">
           <p className="text-gray-600 text-sm">Paid</p>
-          <p className="text-3xl font-bold text-green-600 mt-2">{stats.paidCount}</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">
+            {stats.paidCount}
+          </p>
         </div>
         <div className="bg-red-50 rounded-lg p-6 shadow">
           <p className="text-gray-600 text-sm">Unpaid</p>
-          <p className="text-3xl font-bold text-red-600 mt-2">{stats.unpaidCount}</p>
+          <p className="text-3xl font-bold text-red-600 mt-2">
+            {stats.unpaidCount}
+          </p>
         </div>
         <div className="bg-blue-50 rounded-lg p-6 shadow">
           <p className="text-gray-600 text-sm">Total Collected</p>
-          <p className="text-2xl font-bold text-blue-600 mt-2">{formatCurrency(stats.totalCollected)}</p>
+          <p className="text-2xl font-bold text-blue-600 mt-2">
+            {formatCurrency(stats.totalCollected)}
+          </p>
         </div>
       </div>
 
@@ -170,10 +190,14 @@ export default function Payments() {
       <div className="bg-white rounded-lg p-6 shadow space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status
+            </label>
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'All' | 'Paid' | 'Unpaid')}
+              onChange={(e) =>
+                setStatusFilter(e.target.value as "All" | "Paid" | "Unpaid")
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="All">All</option>
@@ -183,7 +207,9 @@ export default function Payments() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Year
+            </label>
             <select
               value={yearFilter}
               onChange={(e) => setYearFilter(e.target.value)}
@@ -199,7 +225,9 @@ export default function Payments() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Batch (Semester)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Batch (Semester)
+            </label>
             <select
               value={batchFilter}
               onChange={(e) => setBatchFilter(e.target.value)}
@@ -215,7 +243,9 @@ export default function Payments() {
           </div>
 
           <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search
+            </label>
             <SearchBar
               value={searchTerm}
               onChange={setSearchTerm}
@@ -226,10 +256,10 @@ export default function Payments() {
 
         <button
           onClick={() => {
-            setStatusFilter('All');
-            setYearFilter('All');
-            setBatchFilter('All');
-            setSearchTerm('');
+            setStatusFilter("All");
+            setYearFilter("All");
+            setBatchFilter("All");
+            setSearchTerm("");
           }}
           className="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors text-sm font-medium"
         >
@@ -242,13 +272,27 @@ export default function Payments() {
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Student</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Roll Number</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Year/Batch</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Amount</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Transaction ID</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Payment Date</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Student
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Roll Number
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Year/Batch
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Amount
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Status
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Transaction ID
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                Payment Date
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -257,11 +301,15 @@ export default function Payments() {
                 <tr key={student.id} className="border-b hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-medium text-gray-900">{student.fullName}</p>
+                      <p className="font-medium text-gray-900">
+                        {student.fullName}
+                      </p>
                       <p className="text-xs text-gray-500">{student.email}</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{student.rollNumber}</td>
+                  <td className="px-6 py-4 text-gray-700">
+                    {student.rollNumber}
+                  </td>
                   <td className="px-6 py-4 text-gray-700">
                     {student.session} / Sem {student.semester}
                   </td>
@@ -271,14 +319,18 @@ export default function Payments() {
                   <td className="px-6 py-4">
                     <Badge
                       label={student.paymentStatus}
-                      status={student.paymentStatus === 'Paid' ? 'paid' : 'unpaid'}
+                      status={
+                        student.paymentStatus === "Paid" ? "paid" : "unpaid"
+                      }
                     />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {student.paymentDetails?.transactionId || 'N/A'}
+                    {student.paymentDetails?.transactionId || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {student.paymentDetails?.paidDate ? formatDate(student.paymentDetails.paidDate) : 'N/A'}
+                    {student.paymentDetails?.paidDate
+                      ? formatDate(student.paymentDetails.paidDate)
+                      : "N/A"}
                   </td>
                 </tr>
               ))
@@ -297,12 +349,19 @@ export default function Payments() {
       {/* Recent Payments */}
       {recentPayments.length > 0 && (
         <div className="bg-white rounded-lg p-6 shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Payments</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Recent Payments
+          </h3>
           <div className="space-y-3">
             {recentPayments.map((student) => (
-              <div key={student.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div
+                key={student.id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              >
                 <div>
-                  <p className="font-medium text-gray-900">{student.fullName}</p>
+                  <p className="font-medium text-gray-900">
+                    {student.fullName}
+                  </p>
                   <p className="text-sm text-gray-600">{student.rollNumber}</p>
                 </div>
                 <div className="text-right">
@@ -310,7 +369,9 @@ export default function Payments() {
                     {formatCurrency(student.paymentDetails?.paidAmount || 0)}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {student.paymentDetails?.paidDate ? formatDate(student.paymentDetails.paidDate) : 'N/A'}
+                    {student.paymentDetails?.paidDate
+                      ? formatDate(student.paymentDetails.paidDate)
+                      : "N/A"}
                   </p>
                 </div>
               </div>
@@ -325,8 +386,8 @@ export default function Payments() {
         onClose={() => {
           setShowAddPaymentModal(false);
           setNewPayment({
-            studentId: '',
-            transactionId: '',
+            studentId: "",
+            transactionId: "",
             paidAmount: 30000,
           });
         }}
@@ -335,7 +396,9 @@ export default function Payments() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Student *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Student *
+            </label>
             <select
               value={newPayment.studentId}
               onChange={(e) =>
@@ -348,7 +411,7 @@ export default function Payments() {
             >
               <option value="">Select student...</option>
               {students
-                .filter((s) => s.paymentStatus === 'Unpaid')
+                .filter((s) => s.paymentStatus === "Unpaid")
                 .map((student) => (
                   <option key={student.id} value={student.id}>
                     {student.fullName} ({student.rollNumber})
@@ -358,7 +421,9 @@ export default function Payments() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Amount *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Amount *
+            </label>
             <input
               type="number"
               value={newPayment.paidAmount}
@@ -373,7 +438,9 @@ export default function Payments() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Transaction ID *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Transaction ID *
+            </label>
             <input
               type="text"
               value={newPayment.transactionId}
@@ -393,8 +460,8 @@ export default function Payments() {
               onClick={() => {
                 setShowAddPaymentModal(false);
                 setNewPayment({
-                  studentId: '',
-                  transactionId: '',
+                  studentId: "",
+                  transactionId: "",
                   paidAmount: 30000,
                 });
               }}

@@ -1,17 +1,25 @@
-import { useState, useEffect } from 'react';
-import { Edit2, ChevronLeft, ChevronRight, Plus, X } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { localStorageService } from '@/services/localStorage';
-import { getCurrentWeek } from '@/utils/formatting';
-import { WeeklyMenu, MenuItem } from '@/types';
+import { useState, useEffect } from "react";
+import { Edit2, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { Modal } from "@/components/common/Modal";
+import { localStorageService } from "@/services/localStorage";
+import { getCurrentWeek } from "@/utils/formatting";
+import { WeeklyMenu, MenuItem } from "@/types";
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const MEALS = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
+const DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+const MEALS = ["Breakfast", "Lunch", "Snacks", "Dinner"];
 const MEAL_TIMES = {
-  Breakfast: '7:30 - 9:00 AM',
-  Lunch: '12:30 - 2:00 PM',
-  Snacks: '5:00 - 6:00 PM',
-  Dinner: '7:30 - 9:00 PM',
+  Breakfast: "7:30 - 9:00 AM",
+  Lunch: "12:30 - 2:00 PM",
+  Snacks: "5:00 - 6:00 PM",
+  Dinner: "7:30 - 9:00 PM",
 };
 
 interface EditingState {
@@ -26,17 +34,21 @@ export default function Menu() {
   const [currentMenu, setCurrentMenu] = useState<WeeklyMenu | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingCell, setEditingCell] = useState<EditingState>({
-    day: '',
-    meal: '',
+    day: "",
+    meal: "",
     isOpen: false,
   });
-  const [newDishName, setNewDishName] = useState('');
-  const [newDishDietary, setNewDishDietary] = useState<'Veg' | 'Non-veg'>('Veg');
+  const [newDishName, setNewDishName] = useState("");
+  const [newDishDietary, setNewDishDietary] = useState<"Veg" | "Non-veg">(
+    "Veg",
+  );
 
   useEffect(() => {
     const allMenus = localStorageService.getMenus();
     setMenus(allMenus);
-    const menu = allMenus.find((m) => m.week === currentWeek && m.year === 2024);
+    const menu = allMenus.find(
+      (m) => m.week === currentWeek && m.year === 2024,
+    );
     setCurrentMenu(menu || null);
   }, [currentWeek]);
 
@@ -51,7 +63,7 @@ export default function Menu() {
   const handleEditCell = (day: string, meal: string) => {
     if (!isEditMode) return;
     setEditingCell({ day, meal, isOpen: true });
-    setNewDishName('');
+    setNewDishName("");
   };
 
   const handleAddDish = () => {
@@ -72,7 +84,7 @@ export default function Menu() {
     localStorageService.updateMenu(currentMenu.id, updatedMenu);
     setMenus(localStorageService.getMenus());
     setCurrentMenu(updatedMenu);
-    setNewDishName('');
+    setNewDishName("");
   };
 
   const handleRemoveDish = (index: number) => {
@@ -88,10 +100,10 @@ export default function Menu() {
   };
 
   const getDietaryColor = (dietary: string) => {
-    if (dietary === 'Veg') {
-      return 'bg-green-100 text-green-700';
+    if (dietary === "Veg") {
+      return "bg-green-100 text-green-700";
     } else {
-      return 'bg-orange-100 text-orange-700';
+      return "bg-orange-100 text-orange-700";
     }
   };
 
@@ -144,9 +156,14 @@ export default function Menu() {
         <table className="w-full">
           <thead>
             <tr className="bg-gray-100 border-b-2 border-gray-300">
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Day</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">
+                Day
+              </th>
               {MEALS.map((meal) => (
-                <th key={meal} className="px-6 py-4 text-left text-sm font-bold text-gray-900">
+                <th
+                  key={meal}
+                  className="px-6 py-4 text-left text-sm font-bold text-gray-900"
+                >
                   {meal} <br />
                   <span className="text-xs font-normal text-gray-600">
                     ({MEAL_TIMES[meal as keyof typeof MEAL_TIMES]})
@@ -158,7 +175,9 @@ export default function Menu() {
           <tbody>
             {DAYS.map((day) => (
               <tr key={day} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-6 font-semibold text-gray-900 bg-gray-50 w-24">{day}</td>
+                <td className="px-6 py-6 font-semibold text-gray-900 bg-gray-50 w-24">
+                  {day}
+                </td>
                 {MEALS.map((meal) => {
                   const dayData = currentMenu[day as keyof WeeklyMenu] as any;
                   const dishes = dayData?.[meal] || [];
@@ -167,17 +186,20 @@ export default function Menu() {
                     <td
                       key={`${day}-${meal}`}
                       className={`px-6 py-6 cursor-pointer transition-colors ${
-                        dishes.some((d: MenuItem) => d.dietary === 'Veg')
-                          ? 'bg-green-50'
+                        dishes.some((d: MenuItem) => d.dietary === "Veg")
+                          ? "bg-green-50"
                           : dishes.length > 0
-                          ? 'bg-orange-50'
-                          : 'bg-white'
+                            ? "bg-orange-50"
+                            : "bg-white"
                       }`}
                       onClick={() => handleEditCell(day, meal)}
                     >
                       <div className="space-y-3">
                         {dishes.map((dish: MenuItem, index: number) => (
-                          <div key={index} className={`p-2 rounded ${getDietaryColor(dish.dietary)}`}>
+                          <div
+                            key={index}
+                            className={`p-2 rounded ${getDietaryColor(dish.dietary)}`}
+                          >
                             <p className="font-semibold text-sm">{dish.name}</p>
                             <p className="text-xs opacity-75">{dish.dietary}</p>
                             {isEditMode && (
@@ -232,8 +254,8 @@ export default function Menu() {
         <Modal
           isOpen={editingCell.isOpen}
           onClose={() => {
-            setEditingCell({ day: '', meal: '', isOpen: false });
-            setNewDishName('');
+            setEditingCell({ day: "", meal: "", isOpen: false });
+            setNewDishName("");
           }}
           title={`Edit ${editingCell.meal} - ${editingCell.day}`}
           size="md"
@@ -241,24 +263,31 @@ export default function Menu() {
           <div className="space-y-4">
             {/* Existing Dishes */}
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">Current Items</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Current Items
+              </h4>
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {((currentMenu[editingCell.day as keyof WeeklyMenu] as any)?.[editingCell.meal] || []).map(
-                  (dish: MenuItem, index: number) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                      <div>
-                        <p className="font-medium text-gray-900">{dish.name}</p>
-                        <p className="text-xs text-gray-500">{dish.dietary}</p>
-                      </div>
-                      <button
-                        onClick={() => handleRemoveDish(index)}
-                        className="text-red-600 hover:text-red-700 font-bold"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                {(
+                  (currentMenu[editingCell.day as keyof WeeklyMenu] as any)?.[
+                    editingCell.meal
+                  ] || []
+                ).map((dish: MenuItem, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-900">{dish.name}</p>
+                      <p className="text-xs text-gray-500">{dish.dietary}</p>
                     </div>
-                  )
-                )}
+                    <button
+                      onClick={() => handleRemoveDish(index)}
+                      className="text-red-600 hover:text-red-700 font-bold"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -267,7 +296,9 @@ export default function Menu() {
               <h4 className="font-semibold text-gray-900 mb-3">Add New Item</h4>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Dish Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Dish Name
+                  </label>
                   <input
                     type="text"
                     value={newDishName}
@@ -278,10 +309,14 @@ export default function Menu() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Type
+                  </label>
                   <select
                     value={newDishDietary}
-                    onChange={(e) => setNewDishDietary(e.target.value as 'Veg' | 'Non-veg')}
+                    onChange={(e) =>
+                      setNewDishDietary(e.target.value as "Veg" | "Non-veg")
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Veg">Vegetarian</option>
@@ -302,8 +337,8 @@ export default function Menu() {
             <div className="flex gap-3 pt-4 border-t">
               <button
                 onClick={() => {
-                  setEditingCell({ day: '', meal: '', isOpen: false });
-                  setNewDishName('');
+                  setEditingCell({ day: "", meal: "", isOpen: false });
+                  setNewDishName("");
                 }}
                 className="flex-1 px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-medium"
               >
