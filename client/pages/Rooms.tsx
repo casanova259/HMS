@@ -294,9 +294,9 @@ export default function Rooms() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={`Room ${selectedRoom.number} Details`}
-          size="md"
+          size="lg"
         >
-          <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
             {/* Room Info Section */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
