@@ -141,7 +141,7 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <PlaceholderPage title="Announcements" />
+                    <Announcements />
                   </Layout>
                 </ProtectedRoute>
               }
