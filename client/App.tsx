@@ -18,6 +18,7 @@ import Menu from "@/pages/Menu";
 import Complaints from "@/pages/Complaints";
 import Payments from "@/pages/Payments";
 import FoodRequests from "@/pages/FoodRequests";
+import Announcements from "@/pages/Announcements";
 import Reports from "@/pages/Reports";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
