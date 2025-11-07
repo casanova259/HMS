@@ -95,6 +95,34 @@ export default function Login() {
           </button>
         </div>
 
+        {/* Sample Credentials Info */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <p className="text-xs font-semibold text-amber-900 mb-2">Sample Credentials:</p>
+          <div className="text-xs text-amber-800 space-y-1">
+            {selectedRole === "Warden" && (
+              <>
+                <p><span className="font-medium">Email:</span> warden@college.edu</p>
+                <p><span className="font-medium">Staff ID:</span> WD001</p>
+                <p><span className="font-medium">Password:</span> warden123</p>
+              </>
+            )}
+            {selectedRole === "Librarian" && (
+              <>
+                <p><span className="font-medium">Email:</span> librarian@college.edu</p>
+                <p><span className="font-medium">Staff ID:</span> LIB001</p>
+                <p><span className="font-medium">Password:</span> librarian123</p>
+              </>
+            )}
+            {selectedRole === "HOD" && (
+              <>
+                <p><span className="font-medium">Email:</span> hod@college.edu</p>
+                <p><span className="font-medium">Staff ID:</span> HOD001</p>
+                <p><span className="font-medium">Password:</span> hod123</p>
+              </>
+            )}
+          </div>
+        </div>
+
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
