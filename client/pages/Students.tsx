@@ -334,6 +334,13 @@ export default function Students() {
   };
 
   if (activeTab === "list") {
+    const paidCount = filteredStudents.filter(
+      (s) => s.paymentStatus === "Paid",
+    ).length;
+    const unpaidCount = filteredStudents.filter(
+      (s) => s.paymentStatus === "Unpaid",
+    ).length;
+
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -341,13 +348,38 @@ export default function Students() {
             <h1 className="text-3xl font-bold text-gray-900">Students</h1>
             <p className="text-gray-600 mt-2">Manage hostel students ({filteredStudents.length})</p>
           </div>
-          <button
-            onClick={() => setActiveTab("add")}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            Add Student
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <Download className="w-5 h-5" />
+              Export CSV
+            </button>
+            <button
+              onClick={() => setActiveTab("add")}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              Add Student
+            </button>
+          </div>
+        </div>
+
+        {/* Payment Summary */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg p-6 shadow">
+            <p className="text-gray-600 text-sm">Total Students</p>
+            <p className="text-3xl font-bold text-gray-900 mt-2">{filteredStudents.length}</p>
+          </div>
+          <div className="bg-green-50 rounded-lg p-6 shadow border border-green-200">
+            <p className="text-green-700 text-sm font-medium">Paid</p>
+            <p className="text-3xl font-bold text-green-600 mt-2">{paidCount}</p>
+          </div>
+          <div className="bg-red-50 rounded-lg p-6 shadow border border-red-200">
+            <p className="text-red-700 text-sm font-medium">Unpaid</p>
+            <p className="text-3xl font-bold text-red-600 mt-2">{unpaidCount}</p>
+          </div>
         </div>
 
         {/* Filters */}
