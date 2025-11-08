@@ -1,18 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
-import { Plus, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Plus, CheckCircle, XCircle } from "lucide-react";
 import { Modal } from "@/components/common/Modal";
 import { Badge } from "@/components/common/Badge";
 import { localStorageService } from "@/services/localStorage";
-import { getDaysUntil } from "@/utils/formatting";
 import { FoodRequest } from "@/types";
 
 export default function FoodRequests() {
   const [foodRequests, setFoodRequests] = useState<FoodRequest[]>([]);
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
-    null,
-  );
 
   const [newRequest, setNewRequest] = useState({
     dishName: "",
@@ -119,7 +115,6 @@ export default function FoodRequests() {
     };
     return colors[mealType] || "bg-gray-100 text-gray-800";
   };
-
 
   return (
     <div className="space-y-8">
