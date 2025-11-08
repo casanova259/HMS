@@ -67,6 +67,35 @@ export default function Students() {
   const rooms = localStorageService.getRooms();
   const students = localStorageService.getStudents();
 
+  // Filter students
+  const filteredStudents = useMemo(() => {
+    let filtered = [...students];
+
+    if (departmentFilter !== "All") {
+      filtered = filtered.filter((s) => s.class === departmentFilter);
+    }
+
+    if (semesterFilter !== "All") {
+      filtered = filtered.filter((s) => s.semester === parseInt(semesterFilter));
+    }
+
+    if (sessionFilter !== "All") {
+      filtered = filtered.filter((s) => s.session === sessionFilter);
+    }
+
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (s) =>
+          s.fullName.toLowerCase().includes(query) ||
+          s.rollNumber.toLowerCase().includes(query) ||
+          s.email.toLowerCase().includes(query),
+      );
+    }
+
+    return filtered.sort((a, b) => a.fullName.localeCompare(b.fullName));
+  }, [students, departmentFilter, semesterFilter, sessionFilter, searchQuery]);
+
   // Get available rooms (with empty beds)
   const availableRooms = useMemo(() => {
     return rooms.filter((room) => {
