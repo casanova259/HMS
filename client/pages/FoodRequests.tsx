@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Plus, ThumbsUp, CheckCircle } from "lucide-react";
+import { Plus, CheckCircle, XCircle, Clock } from "lucide-react";
 import { Modal } from "@/components/common/Modal";
 import { Badge } from "@/components/common/Badge";
 import { localStorageService } from "@/services/localStorage";
