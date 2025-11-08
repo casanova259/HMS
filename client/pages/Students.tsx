@@ -36,6 +36,10 @@ export default function Students() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successData, setSuccessData] = useState<SuccessData | null>(null);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [semesterFilter, setSemesterFilter] = useState<string>("All");
+  const [sessionFilter, setSessionFilter] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const [formData, setFormData] = useState({
     fullName: "",
