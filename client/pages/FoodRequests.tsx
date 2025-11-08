@@ -120,17 +120,6 @@ export default function FoodRequests() {
     return colors[mealType] || "bg-gray-100 text-gray-800";
   };
 
-  const hasVoted = (request: FoodRequest) => {
-    return (
-      currentUser && request.votedBy.includes(currentUser.staffId || "guest")
-    );
-  };
-
-  const getVotePercentage = (votes: number, total: number) => {
-    return total === 0 ? 0 : Math.round((votes / total) * 100);
-  };
-
-  const totalVotes = activeRequests.reduce((sum, r) => sum + r.votes, 0);
 
   return (
     <div className="space-y-8">
