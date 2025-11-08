@@ -17,6 +17,8 @@ export default function Maintenance() {
     useState<MaintenanceRequest | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showTechnicianModal, setShowTechnicianModal] = useState(false);
+  const [technicianName, setTechnicianName] = useState<string>("");
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
 
   // Filters
