@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Edit2, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { Modal } from "@/components/common/Modal";
 import { localStorageService } from "@/services/localStorage";
-import { getCurrentWeek } from "@/utils/formatting";
+import { getCurrentWeek, formatDate } from "@/utils/formatting";
 import { WeeklyMenu, MenuItem } from "@/types";
 
 const DAYS = [
@@ -39,6 +39,7 @@ export default function Menu() {
     isOpen: false,
   });
   const [newDishName, setNewDishName] = useState("");
+  const [newDishDescription, setNewDishDescription] = useState("");
   const [newDishDietary, setNewDishDietary] = useState<"Veg" | "Non-veg">(
     "Veg",
   );
@@ -64,6 +65,7 @@ export default function Menu() {
     if (!isEditMode) return;
     setEditingCell({ day, meal, isOpen: true });
     setNewDishName("");
+    setNewDishDescription("");
   };
 
   const handleAddDish = () => {
@@ -77,6 +79,7 @@ export default function Menu() {
       time: MEAL_TIMES[editingCell.meal as keyof typeof MEAL_TIMES],
       dietary: newDishDietary,
       allergens: [],
+      description: newDishDescription || undefined,
     };
 
     dayData[editingCell.meal].push(newDish);
@@ -85,6 +88,7 @@ export default function Menu() {
     setMenus(localStorageService.getMenus());
     setCurrentMenu(updatedMenu);
     setNewDishName("");
+    setNewDishDescription("");
   };
 
   const handleRemoveDish = (index: number) => {
@@ -99,11 +103,19 @@ export default function Menu() {
     setCurrentMenu(updatedMenu);
   };
 
-  const getDietaryColor = (dietary: string) => {
+  const getDishBgColor = (dietary: string) => {
     if (dietary === "Veg") {
-      return "bg-green-100 text-green-700";
+      return "bg-green-100 border-l-4 border-green-500";
     } else {
-      return "bg-orange-100 text-orange-700";
+      return "bg-orange-100 border-l-4 border-orange-500";
+    }
+  };
+
+  const getDishTextColor = (dietary: string) => {
+    if (dietary === "Veg") {
+      return "text-green-800";
+    } else {
+      return "text-orange-800";
     }
   };
 
@@ -121,7 +133,22 @@ export default function Menu() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold text-gray-900">Mess Menu</h1>
-          <p className="text-gray-600 mt-2">Week of Oct 28 - Nov 3, 2024</p>
+          <p className="text-gray-600 mt-2">
+            Week of{" "}
+            {new Date(2024, 0, 1 + currentWeek * 7).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            -{" "}
+            {new Date(2024, 0, 1 + currentWeek * 7 + 6).toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              },
+            )}
+          </p>
         </div>
         <button
           onClick={() => setIsEditMode(!isEditMode)}
@@ -136,7 +163,7 @@ export default function Menu() {
       <div className="flex items-center justify-center gap-3">
         <button
           onClick={handlePreviousWeek}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700"
+          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors"
         >
           Previous
         </button>
@@ -145,63 +172,64 @@ export default function Menu() {
         </button>
         <button
           onClick={handleNextWeek}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700"
+          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors"
         >
           Next
         </button>
       </div>
 
-      {/* Menu Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-100 border-b-2 border-gray-300">
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">
-                Day
-              </th>
+      {/* Menu Grid */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <div className="min-w-full">
+            {/* Header Row */}
+            <div className="grid grid-cols-5 bg-gray-50 border-b-2 border-gray-200">
+              <div className="px-4 py-4 font-bold text-gray-900">Day</div>
               {MEALS.map((meal) => (
-                <th
-                  key={meal}
-                  className="px-6 py-4 text-left text-sm font-bold text-gray-900"
-                >
-                  {meal} <br />
-                  <span className="text-xs font-normal text-gray-600">
-                    ({MEAL_TIMES[meal as keyof typeof MEAL_TIMES]})
-                  </span>
-                </th>
+                <div key={meal} className="px-4 py-4 font-bold text-gray-900">
+                  <div className="text-center">
+                    <p className="font-bold">{meal}</p>
+                    <p className="text-xs text-gray-600 font-normal">
+                      ({MEAL_TIMES[meal as keyof typeof MEAL_TIMES]})
+                    </p>
+                  </div>
+                </div>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </div>
+
+            {/* Day Rows */}
             {DAYS.map((day) => (
-              <tr key={day} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-6 font-semibold text-gray-900 bg-gray-50 w-24">
+              <div key={day} className="grid grid-cols-5 border-b hover:bg-gray-50 transition-colors">
+                <div className="px-4 py-4 font-semibold text-gray-900 bg-gray-50 border-r">
                   {day}
-                </td>
+                </div>
+
                 {MEALS.map((meal) => {
                   const dayData = currentMenu[day as keyof WeeklyMenu] as any;
                   const dishes = dayData?.[meal] || [];
 
                   return (
-                    <td
+                    <div
                       key={`${day}-${meal}`}
-                      className={`px-6 py-6 cursor-pointer transition-colors ${
-                        dishes.some((d: MenuItem) => d.dietary === "Veg")
-                          ? "bg-green-50"
-                          : dishes.length > 0
-                            ? "bg-orange-50"
-                            : "bg-white"
-                      }`}
+                      className="px-4 py-4 cursor-pointer transition-colors hover:bg-gray-100"
                       onClick={() => handleEditCell(day, meal)}
                     >
-                      <div className="space-y-3">
+                      <div className="space-y-2 min-h-24">
                         {dishes.map((dish: MenuItem, index: number) => (
                           <div
                             key={index}
-                            className={`p-2 rounded ${getDietaryColor(dish.dietary)}`}
+                            className={`p-3 rounded text-sm ${getDishBgColor(
+                              dish.dietary,
+                            )}`}
                           >
-                            <p className="font-semibold text-sm">{dish.name}</p>
-                            <p className="text-xs opacity-75">{dish.dietary}</p>
+                            <p className={`font-semibold ${getDishTextColor(dish.dietary)}`}>
+                              {dish.name}
+                            </p>
+                            {dish.description && (
+                              <p className="text-xs text-gray-600 mt-1">
+                                {dish.description}
+                              </p>
+                            )}
                             {isEditMode && (
                               <button
                                 onClick={(e) => {
@@ -209,7 +237,7 @@ export default function Menu() {
                                   setEditingCell({ day, meal, isOpen: true });
                                   handleRemoveDish(index);
                                 }}
-                                className="text-red-600 hover:text-red-700 font-bold text-xs mt-1"
+                                className="text-red-600 hover:text-red-700 font-bold text-xs mt-2"
                               >
                                 Remove
                               </button>
@@ -222,30 +250,30 @@ export default function Menu() {
                               e.stopPropagation();
                               setEditingCell({ day, meal, isOpen: true });
                             }}
-                            className="text-blue-600 text-xs font-medium hover:text-blue-700 w-full py-1 hover:bg-blue-50 rounded"
+                            className="text-blue-600 text-xs font-medium hover:text-blue-700 py-2 px-2 hover:bg-blue-50 rounded w-full"
                           >
-                            + Add items
+                            + Add Dish
                           </button>
                         )}
                       </div>
-                    </td>
+                    </div>
                   );
                 })}
-              </tr>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="flex gap-8 justify-center text-sm">
+      <div className="flex gap-8 justify-center text-sm p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-green-100 rounded"></div>
+          <div className="w-6 h-6 bg-green-100 border-l-4 border-green-500 rounded"></div>
           <span className="text-gray-700">Vegetarian</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-orange-100 rounded"></div>
-          <span className="text-gray-700">Non-vegetarian</span>
+          <div className="w-6 h-6 bg-orange-100 border-l-4 border-orange-500 rounded"></div>
+          <span className="text-gray-700">Non-Vegetarian</span>
         </div>
       </div>
 
@@ -256,6 +284,7 @@ export default function Menu() {
           onClose={() => {
             setEditingCell({ day: "", meal: "", isOpen: false });
             setNewDishName("");
+            setNewDishDescription("");
           }}
           title={`Edit ${editingCell.meal} - ${editingCell.day}`}
           size="md"
@@ -279,6 +308,9 @@ export default function Menu() {
                     <div>
                       <p className="font-medium text-gray-900">{dish.name}</p>
                       <p className="text-xs text-gray-500">{dish.dietary}</p>
+                      {dish.description && (
+                        <p className="text-xs text-gray-600">{dish.description}</p>
+                      )}
                     </div>
                     <button
                       onClick={() => handleRemoveDish(index)}
@@ -293,7 +325,7 @@ export default function Menu() {
 
             {/* Add New Dish */}
             <div className="border-t pt-4">
-              <h4 className="font-semibold text-gray-900 mb-3">Add New Item</h4>
+              <h4 className="font-semibold text-gray-900 mb-3">Add New Dish</h4>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -304,6 +336,19 @@ export default function Menu() {
                     value={newDishName}
                     onChange={(e) => setNewDishName(e.target.value)}
                     placeholder="Enter dish name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description (Ingredients)
+                  </label>
+                  <input
+                    type="text"
+                    value={newDishDescription}
+                    onChange={(e) => setNewDishDescription(e.target.value)}
+                    placeholder="e.g., Rice, Dal, Curry, Roti"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -329,7 +374,7 @@ export default function Menu() {
                   className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
-                  Add Item
+                  Add Dish
                 </button>
               </div>
             </div>
@@ -339,6 +384,7 @@ export default function Menu() {
                 onClick={() => {
                   setEditingCell({ day: "", meal: "", isOpen: false });
                   setNewDishName("");
+                  setNewDishDescription("");
                 }}
                 className="flex-1 px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-medium"
               >
