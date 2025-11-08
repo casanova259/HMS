@@ -159,6 +159,98 @@ export default function Students() {
     }
   };
 
+  const handleExportCSV = () => {
+    if (filteredStudents.length === 0) {
+      alert("No students to export");
+      return;
+    }
+
+    // Prepare CSV header
+    const headers = [
+      "Student ID",
+      "Full Name",
+      "Roll Number",
+      "University Roll Number",
+      "Department",
+      "Semester",
+      "Session",
+      "Email",
+      "Mobile Number",
+      "Emergency Contact",
+      "Father's Name",
+      "Date of Birth",
+      "Blood Group",
+      "Address",
+      "Previous Hostel",
+      "Medical Conditions",
+      "Allergy Information",
+      "Room Number",
+      "Bed Number",
+      "Payment Status",
+      "Paid Amount",
+      "Paid Date",
+      "Transaction ID",
+    ];
+
+    // Prepare CSV rows
+    const rows = filteredStudents.map((student) => {
+      const room = rooms.find((r) => r.id === student.roomId);
+      return [
+        student.id,
+        student.fullName,
+        student.rollNumber,
+        student.universityRollNumber,
+        student.class,
+        student.semester,
+        student.session,
+        student.email,
+        student.mobileNumber,
+        student.emergencyContact,
+        student.fathersName || "",
+        student.dob ? student.dob.split("T")[0] : "",
+        student.bloodGroup || "",
+        student.address || "",
+        student.previousHostel || "",
+        student.medicalConditions || "",
+        student.allergyInformation || "",
+        room ? room.number : "N/A",
+        student.bedNumber,
+        student.paymentStatus,
+        student.paymentDetails?.paidAmount || 0,
+        student.paymentDetails?.paidDate
+          ? student.paymentDetails.paidDate.split("T")[0]
+          : "",
+        student.paymentDetails?.transactionId || "",
+      ];
+    });
+
+    // Convert to CSV string
+    const csvContent = [
+      headers.map((h) => `"${h}"`).join(","),
+      ...rows.map((row) =>
+        row
+          .map((cell) =>
+            typeof cell === "string" ? `"${cell.replace(/"/g, '""')}"` : cell,
+          )
+          .join(","),
+      ),
+    ].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `students_${new Date().toISOString().split("T")[0]}.csv`,
+    );
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleAllocateStudent = () => {
     if (!validateForm()) return;
 
