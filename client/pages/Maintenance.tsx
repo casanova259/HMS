@@ -91,6 +91,20 @@ export default function Maintenance() {
     return rooms.find((r) => r.id === roomId)?.number || "Unknown";
   };
 
+  const handleAssignTechnician = () => {
+    if (selectedRequest && technicianName.trim()) {
+      localStorageService.updateMaintenanceRequest(selectedRequest.id, {
+        assignedTechnician: technicianName,
+        status: "In Progress",
+        progressPercentage: 0,
+      });
+      setMaintenance(localStorageService.getMaintenanceRequests());
+      setShowTechnicianModal(false);
+      setTechnicianName("");
+      setSelectedRequest(null);
+    }
+  };
+
   const handleUpdateProgress = (requestId: string, newProgress: number) => {
     localStorageService.updateMaintenanceRequest(requestId, {
       progressPercentage: newProgress,
