@@ -238,66 +238,63 @@ export default function FoodRequests() {
         </div>
       </div>
 
-      {/* Top Requested Sidebar */}
-      {topRequests.length > 0 && (
-        <div className="bg-white rounded-lg p-6 shadow">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">
-            Top Requested Dishes
-          </h3>
-          <div className="space-y-4">
-            {topRequests.map((request, index) => (
-              <div
-                key={request.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="text-2xl font-bold text-blue-600">
-                    #{index + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {request.dishName}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {request.votes} votes
-                    </p>
-                  </div>
+      {/* Accepted Requests */}
+      {acceptedRequests.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            ✅ Accepted Requests
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {acceptedRequests.map((request) => (
+              <div key={request.id} className="bg-white rounded-lg p-6 shadow border-l-4 border-green-600">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-lg font-bold text-gray-900">
+                    🍽️ {request.dishName}
+                  </h3>
+                  <Badge
+                    label="Accepted"
+                    color="bg-green-100 text-green-800"
+                  />
                 </div>
-                <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                  Consider
-                </button>
+                <p className="text-sm text-gray-600 mb-4">
+                  {request.description || "No description provided"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    label={request.mealType}
+                    color={getMealColor(request.mealType)}
+                  />
+                  <Badge
+                    label={request.dietary}
+                    color={getDietaryColor(request.dietary)}
+                  />
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Completed Requests */}
-      {completedRequests.length > 0 && (
+      {/* Rejected Requests */}
+      {rejectedRequests.length > 0 && (
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Past Requests
+            ❌ Rejected Requests
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {completedRequests.map((request) => (
-              <div key={request.id} className="bg-white rounded-lg p-6 shadow">
+            {rejectedRequests.map((request) => (
+              <div key={request.id} className="bg-white rounded-lg p-6 shadow border-l-4 border-red-600 opacity-75">
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-lg font-bold text-gray-900">
                     🍽️ {request.dishName}
                   </h3>
                   <Badge
-                    label={request.implementationStatus || "Pending"}
-                    status={
-                      request.implementationStatus === "Added to menu"
-                        ? "completed"
-                        : request.implementationStatus === "Rejected"
-                          ? "pending"
-                          : "in-progress"
-                    }
+                    label="Rejected"
+                    color="bg-red-100 text-red-800"
                   />
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
-                  {request.votes} total votes received
+                  {request.description || "No description provided"}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <Badge
