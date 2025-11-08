@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, Check, AlertCircle } from "lucide-react";
+import { Plus, Check, AlertCircle, Download } from "lucide-react";
 import { Modal } from "@/components/common/Modal";
 import { Badge } from "@/components/common/Badge";
 import { localStorageService } from "@/services/localStorage";
