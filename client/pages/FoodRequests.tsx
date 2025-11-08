@@ -144,118 +144,95 @@ export default function FoodRequests() {
         )}
       </div>
 
-      {/* Active Requests */}
+      {/* Pending Requests */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Vote for Your Favorite Dish
+          Pending Dish Requests
         </h2>
         <p className="text-gray-600 mb-4">
-          Voting closes in{" "}
-          {Math.max(
-            0,
-            getDaysUntil(activeRequests[0]?.closingDate || new Date()),
-          )}{" "}
-          days
+          Review and approve or reject dish requests from students
         </p>
-        {currentUser?.role === "Warden" && (
+
+        {currentUser?.role !== "Warden" && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">Note:</span> As a Warden, you can
-              review and vote on dishes but cannot submit new requests. Students
-              can submit dish requests.
+              <span className="font-semibold">Note:</span> Wardens will review
+              your request and accept or reject it. Students can submit dish
+              requests.
             </p>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {activeRequests.length > 0 ? (
-            activeRequests.map((request) => {
-              const votePercentage = getVotePercentage(
-                request.votes,
-                totalVotes || 1,
-              );
-              const userVoted = hasVoted(request);
-
-              return (
-                <div
-                  key={request.id}
-                  className="bg-white rounded-lg p-6 shadow hover:shadow-lg transition-shadow"
-                >
-                  {/* Header */}
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      🍽️ {request.dishName}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge
-                        label={request.mealType}
-                        color={getMealColor(request.mealType)}
-                      />
-                      <Badge
-                        label={request.dietary}
-                        color={getDietaryColor(request.dietary)}
-                      />
-                    </div>
+            activeRequests.map((request) => (
+              <div
+                key={request.id}
+                className="bg-white rounded-lg p-6 shadow hover:shadow-lg transition-shadow"
+              >
+                {/* Header */}
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    🍽️ {request.dishName}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge
+                      label={request.mealType}
+                      color={getMealColor(request.mealType)}
+                    />
+                    <Badge
+                      label={request.dietary}
+                      color={getDietaryColor(request.dietary)}
+                    />
+                    <Badge label="Pending" color="bg-yellow-100 text-yellow-800" />
                   </div>
-
-                  {/* Description */}
-                  {request.description && (
-                    <p className="text-gray-700 text-sm mb-4">
-                      {request.description}
-                    </p>
-                  )}
-
-                  {/* Votes */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-700">
-                        {request.votes} {request.votes === 1 ? "vote" : "votes"}
-                      </span>
-                      <span className="text-sm text-gray-600">
-                        {votePercentage}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div
-                        className="bg-blue-600 h-3 rounded-full transition-all"
-                        style={{ width: `${votePercentage}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Why wanted */}
-                  <p className="text-xs text-gray-600 mb-4 italic">
-                    "{request.whyWantThis}"
-                  </p>
-
-                  {/* Vote Button */}
-                  <button
-                    onClick={() => handleVote(request.id)}
-                    disabled={userVoted}
-                    className={`w-full py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                      userVoted
-                        ? "bg-green-100 text-green-800 cursor-not-allowed"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                    }`}
-                  >
-                    {userVoted ? (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        You Voted ✓
-                      </>
-                    ) : (
-                      <>
-                        <ThumbsUp className="w-4 h-4" />
-                        Vote
-                      </>
-                    )}
-                  </button>
                 </div>
-              );
-            })
+
+                {/* Description */}
+                {request.description && (
+                  <p className="text-gray-700 text-sm mb-4">
+                    {request.description}
+                  </p>
+                )}
+
+                {/* Why wanted */}
+                <p className="text-xs text-gray-600 mb-4 italic">
+                  "{request.whyWantThis}"
+                </p>
+
+                {/* Action Buttons - Only for Warden */}
+                {currentUser?.role === "Warden" && (
+                  <div className="flex gap-2 pt-4 border-t">
+                    <button
+                      onClick={() => handleAccept(request.id)}
+                      className="flex-1 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2"
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleReject(request.id)}
+                      className="flex-1 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      Reject
+                    </button>
+                  </div>
+                )}
+
+                {/* View Only for Non-Warden */}
+                {currentUser?.role !== "Warden" && (
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-gray-600">
+                      Status: <span className="font-semibold">Pending Review</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))
           ) : (
             <div className="col-span-full text-center py-12 text-gray-600">
-              <p>No active dish requests at the moment</p>
+              <p>No pending dish requests at the moment</p>
             </div>
           )}
         </div>
