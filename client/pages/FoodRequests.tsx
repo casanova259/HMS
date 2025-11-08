@@ -33,35 +33,41 @@ export default function FoodRequests() {
   const activeRequests = useMemo(() => {
     return foodRequests
       .filter((r) => r.status === "Active")
-      .sort((a, b) => b.votes - a.votes);
-  }, [foodRequests]);
-
-  const completedRequests = useMemo(() => {
-    return foodRequests
-      .filter((r) => r.status === "Completed")
       .sort(
         (a, b) =>
           new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime(),
       );
   }, [foodRequests]);
 
-  const topRequests = activeRequests.slice(0, 5);
+  const acceptedRequests = useMemo(() => {
+    return foodRequests
+      .filter((r) => r.status === "Accepted")
+      .sort(
+        (a, b) =>
+          new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime(),
+      );
+  }, [foodRequests]);
 
-  const handleVote = (requestId: string) => {
-    const request = foodRequests.find((r) => r.id === requestId);
-    if (!request || !currentUser) return;
+  const rejectedRequests = useMemo(() => {
+    return foodRequests
+      .filter((r) => r.status === "Rejected")
+      .sort(
+        (a, b) =>
+          new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime(),
+      );
+  }, [foodRequests]);
 
-    // Check if user already voted
-    if (request.votedBy.includes(currentUser.staffId || "guest")) {
-      alert("You have already voted for this dish!");
-      return;
-    }
-
+  const handleAccept = (requestId: string) => {
     localStorageService.updateFoodRequest(requestId, {
-      votes: request.votes + 1,
-      votedBy: [...request.votedBy, currentUser.staffId || "guest"],
+      status: "Accepted",
     });
+    setFoodRequests(localStorageService.getFoodRequests());
+  };
 
+  const handleReject = (requestId: string) => {
+    localStorageService.updateFoodRequest(requestId, {
+      status: "Rejected",
+    });
     setFoodRequests(localStorageService.getFoodRequests());
   };
 
