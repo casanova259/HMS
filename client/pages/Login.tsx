@@ -30,7 +30,9 @@ export default function Login() {
             <Lock className="w-8 h-8 text-blue-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Warden Login</h1>
-          <p className="text-gray-600 text-sm mt-2">Enter your credentials to access the system</p>
+          <p className="text-gray-600 text-sm mt-2">
+            Enter your credentials to access the system
+          </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
