@@ -135,10 +135,13 @@ export default function Menu() {
           <h1 className="text-4xl font-bold text-gray-900">Mess Menu</h1>
           <p className="text-gray-600 mt-2">
             Week of{" "}
-            {new Date(2024, 0, 1 + currentWeek * 7).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}{" "}
+            {new Date(2024, 0, 1 + currentWeek * 7).toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                day: "numeric",
+              },
+            )}{" "}
             -{" "}
             {new Date(2024, 0, 1 + currentWeek * 7 + 6).toLocaleDateString(
               "en-US",
@@ -199,7 +202,10 @@ export default function Menu() {
 
             {/* Day Rows */}
             {DAYS.map((day) => (
-              <div key={day} className="grid grid-cols-5 border-b hover:bg-gray-50 transition-colors">
+              <div
+                key={day}
+                className="grid grid-cols-5 border-b hover:bg-gray-50 transition-colors"
+              >
                 <div className="px-4 py-4 font-semibold text-gray-900 bg-gray-50 border-r">
                   {day}
                 </div>
@@ -222,7 +228,9 @@ export default function Menu() {
                               dish.dietary,
                             )}`}
                           >
-                            <p className={`font-semibold ${getDishTextColor(dish.dietary)}`}>
+                            <p
+                              className={`font-semibold ${getDishTextColor(dish.dietary)}`}
+                            >
                               {dish.name}
                             </p>
                             {dish.description && (
@@ -309,7 +317,9 @@ export default function Menu() {
                       <p className="font-medium text-gray-900">{dish.name}</p>
                       <p className="text-xs text-gray-500">{dish.dietary}</p>
                       {dish.description && (
-                        <p className="text-xs text-gray-600">{dish.description}</p>
+                        <p className="text-xs text-gray-600">
+                          {dish.description}
+                        </p>
                       )}
                     </div>
                     <button

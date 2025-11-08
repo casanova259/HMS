@@ -76,7 +76,9 @@ export default function Students() {
     }
 
     if (semesterFilter !== "All") {
-      filtered = filtered.filter((s) => s.semester === parseInt(semesterFilter));
+      filtered = filtered.filter(
+        (s) => s.semester === parseInt(semesterFilter),
+      );
     }
 
     if (sessionFilter !== "All") {
@@ -346,7 +348,9 @@ export default function Students() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Students</h1>
-            <p className="text-gray-600 mt-2">Manage hostel students ({filteredStudents.length})</p>
+            <p className="text-gray-600 mt-2">
+              Manage hostel students ({filteredStudents.length})
+            </p>
           </div>
           <div className="flex gap-2">
             <button
@@ -370,15 +374,21 @@ export default function Students() {
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-white rounded-lg p-6 shadow">
             <p className="text-gray-600 text-sm">Total Students</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{filteredStudents.length}</p>
+            <p className="text-3xl font-bold text-gray-900 mt-2">
+              {filteredStudents.length}
+            </p>
           </div>
           <div className="bg-green-50 rounded-lg p-6 shadow border border-green-200">
             <p className="text-green-700 text-sm font-medium">Paid</p>
-            <p className="text-3xl font-bold text-green-600 mt-2">{paidCount}</p>
+            <p className="text-3xl font-bold text-green-600 mt-2">
+              {paidCount}
+            </p>
           </div>
           <div className="bg-red-50 rounded-lg p-6 shadow border border-red-200">
             <p className="text-red-700 text-sm font-medium">Unpaid</p>
-            <p className="text-3xl font-bold text-red-600 mt-2">{unpaidCount}</p>
+            <p className="text-3xl font-bold text-red-600 mt-2">
+              {unpaidCount}
+            </p>
           </div>
         </div>
 
@@ -505,34 +515,56 @@ export default function Students() {
                   {filteredStudents.map((student) => {
                     const room = rooms.find((r) => r.id === student.roomId);
                     return (
-                      <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                      <tr
+                        key={student.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="font-medium text-gray-900">{student.fullName}</p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="text-sm text-gray-600">{student.rollNumber}</p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge label={student.class} color="bg-blue-100 text-blue-800" />
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="text-sm text-gray-600">Sem {student.semester}</p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="text-sm text-gray-600">{student.session}</p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="text-sm text-gray-600">
-                            {room ? `${room.number} (Bed ${student.bedNumber})` : "N/A"}
+                          <p className="font-medium text-gray-900">
+                            {student.fullName}
                           </p>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <p className="text-sm text-gray-600">{student.email}</p>
+                          <p className="text-sm text-gray-600">
+                            {student.rollNumber}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <Badge
+                            label={student.class}
+                            color="bg-blue-100 text-blue-800"
+                          />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <p className="text-sm text-gray-600">
+                            Sem {student.semester}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <p className="text-sm text-gray-600">
+                            {student.session}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <p className="text-sm text-gray-600">
+                            {room
+                              ? `${room.number} (Bed ${student.bedNumber})`
+                              : "N/A"}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <p className="text-sm text-gray-600">
+                            {student.email}
+                          </p>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge
                             label={student.paymentStatus}
-                            status={student.paymentStatus === "Paid" ? "paid" : "unpaid"}
+                            status={
+                              student.paymentStatus === "Paid"
+                                ? "paid"
+                                : "unpaid"
+                            }
                           />
                         </td>
                       </tr>
@@ -544,7 +576,9 @@ export default function Students() {
           ) : (
             <div className="p-12 text-center">
               <AlertCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-600">No students found matching your filters</p>
+              <p className="text-gray-600">
+                No students found matching your filters
+              </p>
             </div>
           )}
         </div>

@@ -179,7 +179,10 @@ export default function FoodRequests() {
                       label={request.dietary}
                       color={getDietaryColor(request.dietary)}
                     />
-                    <Badge label="Pending" color="bg-yellow-100 text-yellow-800" />
+                    <Badge
+                      label="Pending"
+                      color="bg-yellow-100 text-yellow-800"
+                    />
                   </div>
                 </div>
 
@@ -219,7 +222,8 @@ export default function FoodRequests() {
                 {currentUser?.role !== "Warden" && (
                   <div className="pt-4 border-t">
                     <p className="text-sm text-gray-600">
-                      Status: <span className="font-semibold">Pending Review</span>
+                      Status:{" "}
+                      <span className="font-semibold">Pending Review</span>
                     </p>
                   </div>
                 )}
@@ -241,15 +245,15 @@ export default function FoodRequests() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {acceptedRequests.map((request) => (
-              <div key={request.id} className="bg-white rounded-lg p-6 shadow border-l-4 border-green-600">
+              <div
+                key={request.id}
+                className="bg-white rounded-lg p-6 shadow border-l-4 border-green-600"
+              >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-lg font-bold text-gray-900">
                     🍽️ {request.dishName}
                   </h3>
-                  <Badge
-                    label="Accepted"
-                    color="bg-green-100 text-green-800"
-                  />
+                  <Badge label="Accepted" color="bg-green-100 text-green-800" />
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
                   {request.description || "No description provided"}
@@ -278,15 +282,15 @@ export default function FoodRequests() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rejectedRequests.map((request) => (
-              <div key={request.id} className="bg-white rounded-lg p-6 shadow border-l-4 border-red-600 opacity-75">
+              <div
+                key={request.id}
+                className="bg-white rounded-lg p-6 shadow border-l-4 border-red-600 opacity-75"
+              >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-lg font-bold text-gray-900">
                     🍽️ {request.dishName}
                   </h3>
-                  <Badge
-                    label="Rejected"
-                    color="bg-red-100 text-red-800"
-                  />
+                  <Badge label="Rejected" color="bg-red-100 text-red-800" />
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
                   {request.description || "No description provided"}
