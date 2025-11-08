@@ -393,7 +393,14 @@ export default function Maintenance() {
               <div className="flex gap-2 pt-4 border-t">
                 {request.status === "Pending" && (
                   <>
-                    <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    <button
+                      onClick={() => {
+                        setSelectedRequest(request);
+                        setTechnicianName("");
+                        setShowTechnicianModal(true);
+                      }}
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    >
                       Assign Technician
                     </button>
                     <button
