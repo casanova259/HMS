@@ -18,8 +18,8 @@ export default function Login() {
     };
     localStorage.setItem("currentUser", JSON.stringify(userInfo));
 
-    // Redirect to dashboard
-    navigate("/");
+    // Redirect to dashboard (replace history so back doesn't go to login)
+    navigate("/", { replace: true });
   };
 
   return (
