@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import StatCard from "@/components/common/StatCard";
+import StatCard from "./../components/common/StatCard";
 import {
   Users,
   BedDouble,
@@ -55,32 +55,32 @@ export default function Dashboard() {
           <StatCard
             title="Total Occupancy"
             value="450/500"
-            icon={<BedDouble className="h-4 w-4 text-muted-foreground" />}
-            trend="+5% from last month"
+            icon={BedDouble}
+            trend="up"
           />
         </Link>
         <Link to="/students">
           <StatCard
             title="Total Students"
             value="480"
-            icon={<Users className="h-4 w-4 text-muted-foreground" />}
-            trend="+10% from last month"
+            icon={Users}
+            trend="up"
           />
         </Link>
         <Link to="/payments">
           <StatCard
             title="Fees Paid"
             value="₹1,20,000"
-            icon={<CurrencyIcon className="h-4 w-4 text-muted-foreground" />}
-            trend="+2.5% from last month"
+            icon={CurrencyIcon}
+            trend="up"
           />
         </Link>
         <Link to="/payments">
           <StatCard
             title="Pending Dues"
             value="₹15,000"
-            icon={<Receipt className="h-4 w-4 text-muted-foreground" />}
-            trend="12 students"
+            icon={Receipt}
+            trend="down"
           />
         </Link>
       </div>
@@ -91,16 +91,16 @@ export default function Dashboard() {
           <StatCard
             title="Pending Maintenance"
             value="5 Requests"
-            icon={<Wrench className="h-4 w-4 text-muted-foreground" />}
-            trend="2 Critical"
+            icon={Wrench}
+            trend="up"
           />
         </Link>
         <Link to="/complaints">
           <StatCard
             title="Unresolved Complaints"
             value="3"
-            icon={<MessageSquareWarning className="h-4 w-4 text-muted-foreground" />}
-            trend="1 New Today"
+            icon={MessageSquareWarning}
+            trend="up"
           />
         </Link>
 
@@ -157,7 +157,7 @@ export default function Dashboard() {
                   <TableRow key={activity.id}>
                     <TableCell>{activity.student}</TableCell>
                     <TableCell>
-                      <Badge variant={activity.action === "Paid Fees" ? "success" : "default"}>
+                      <Badge variant={activity.action === "Paid Fees" ? "secondary" : "default"}>
                         {activity.action}
                       </Badge>
                     </TableCell>

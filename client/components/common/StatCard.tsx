@@ -85,3 +85,7 @@ export const StatCard = ({
     </div>
   );
 };
+
+
+
+export default StatCard;

@@ -111,6 +111,7 @@ export interface MenuItem {
   time: string;
   dietary: "Veg" | "Non-veg" | "Both";
   allergens: string[];
+  description?: string;
 }
 
 export interface MealType {
