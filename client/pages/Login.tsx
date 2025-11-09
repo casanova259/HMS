@@ -18,8 +18,8 @@ export default function Login() {
     };
     localStorage.setItem("currentUser", JSON.stringify(userInfo));
 
-    // Redirect to dashboard (replace history so back doesn't go to login)
-    navigate("/", { replace: true });
+    // Redirect to dashboard
+    navigate("/");
   };
 
   return (
@@ -67,7 +67,7 @@ export default function Login() {
           <button
             type="submit"
             className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-          >
+            onClick={handleLogin}>
             Login
           </button>
         </form>
